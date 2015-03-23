@@ -7,10 +7,20 @@ The parser is capable of handling JSON that has been loaded as NSData and which 
 #How to
 The code requires the latest Xcode 6.3 Beta installed with Swift 1.2
 
-To use simply copy the file: Resources/Parser into your app or playground. It works with iOS and OS X.
+To use simply copy the contents of the Sources folder into your app or playground. It works with iOS and OS X.
+##Parse JSON Data
+To parse NSData simply use
 
-To parse NSData simply use `JSONParser.parseDictionary(json:NSData)` or `JSONParser.parseArray(json:NSData)`
+`JSONParser.parseDictionary(json:NSData, restrictTypeChanges:Bool = true, anyValueIsNullable:Bool = true)`
 
+or 
+
+`JSONParser.parseArray(json:NSData, restrictTypeChanges:Bool = true, anyValueIsNullable:Bool = true)`
+
+Default settings do not allow changes of type but do allow values to become null. To enable changes of type change **restrictTypeChanges** to **false** and to prevent nullability of values change **anyValueIsNullable** to **false**.
+
+These properties can be changed at any time, and of course if the JSON is parsed into a constant value then no changes will be possible anyway until the dictionary or array is copied to a variable.
+##Retrieve and update values
 In order to retrieve a value identify its type, e.g. `if let tName = jsonDictionary["trackName"]?.str {}` or `if let rCount = jsonDictionary["resultCount"]?.num {}`
 
 Updates to results can be made like this `jsonDictionary["results"]?[0]?["trackName"] = "Something"`
@@ -67,6 +77,6 @@ For more refined handling of data, additional types can be created. If you add t
     }
 It's an example of how the data can be filtered but still renconstituted. Note: an explanation of the logic and also suitable patterns for building new types for other APIs is planned. 
 #Future Functionality
-At present types cannot be changed, so if a value is a String it can be only changed to another String, not a number or a dictionary, or an array. In the next update there will be a property that can be changed to enable changes of type if these are desired. There will also be choice of whether or not to allow values to become null by default this will be true but it can be turned off while still assuming that any null value can become something other than null.
+The aim is to enable the JSONDictionary and JSONArray types to mirror the functionality of Dictionary and Array and to have them adhere to the same protocols. Some of this is already in place and the exact methods and properties that are accessible will be listed here soon.
 #Contact
 You can get in touch on twitter [@sketchyTech](http://twitter.com/sketchyTech).
