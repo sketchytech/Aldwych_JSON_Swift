@@ -1,2 +1,49 @@
 # Iolcos
-JSON parser for Swift - for parsing and recreation of parsed data
+JSON parser for Swift - for parsing and re-constituting of parsed data
+
+The code requires the latest Xcode 6.3 Beta installed with Swift 1.2
+
+To use simply copy the file: Resources/Parser into your app or playground. It works with iOS and OS X.
+
+To parse NSData simply use `JSONParser.parseDictionary(json:NSData)` or `JSONParser.parseArray(json:NSData)`
+
+In order to retrieve a value identify its type, e.g. `if let jsonDictionary["trackName"]?.str {}` or `if let jsonDictionary["resultCount"]?.num {}`
+
+Updates to results can be made like this `jsonDictionary["results"]?[0]?["trackName"] = "Something"`
+
+To round-trip the JSON simply write
+
+`NSJSONSerialization.dataWithJSONObject(jsonDictionary.dictionary, options: NSJSONWritingOptions.PrettyPrinted, error: &error)`
+
+or
+
+`NSJSONSerialization.dataWithJSONObject(jsonArray.array, options: NSJSONWritingOptions.PrettyPrinted, error: &error)`
+
+For more refined handling of data additional types can be created. If you add the iTunesData file from the Extras folder then code like this can be can be written:
+
+    if let url = NSURL(string:"http://itunes.apple.com/search?term=b12&limit=40"),
+      data = NSData(contentsOfURL: url),
+      parsedJSON = JSONParser.parseDictionary(data),
+      iTD = iTunesData(dict: parsedJSON)
+     {
+        var tracks = map(iTD.results, {x in Track(dict:x.jsonDict)})
+      
+        tracks[1]?.trackName = "New Name"
+        tracks[1]?.trackName
+          
+        var iT = iTD
+        if let track = tracks[1] {
+          iT.updateTrackDetails(track)
+          }
+          tracks = map(iT.results, {x in Track(dict:x.jsonDict)})
+          
+          for t in tracks {
+          if let tName = t?.trackName,
+          cName = t?.collectionName {
+          print("Track: \(tName) \n Collection: \(cName) \n")
+          }
+          }
+          
+          iT.outputJSON()
+      }
+  It's an example of how the data can be filtered but still renconstituted.
