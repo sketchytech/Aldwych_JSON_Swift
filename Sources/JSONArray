@@ -1,0 +1,519 @@
+//
+//  JSONArray.swift
+//  JSONParser
+//
+//  Created by Anthony Levings on 23/03/2015.
+//  Copyright (c) 2015 Gylphi. All rights reserved.
+//
+
+import Foundation
+
+// initialization of JSONArray type
+public struct JSONArray:SequenceType {
+    public var restrictTypeChanges:Bool
+    public var anyValueIsNullable:Bool
+    // use dictionary with index as keys for position in array
+    private var stringDict:Dictionary<Int,String>?
+    private var numDict:Dictionary<Int,NSNumber>?
+    private var nullDict:Dictionary<Int,NSNull>?
+    // json cases
+    private var arrayDict:Dictionary<Int,JSONArray>?
+    private var dictDict:Dictionary<Int,JSONDictionary>?
+    
+    public var count:Int {
+        var count = 0
+        if let n = stringDict?.count {
+            count += n
+        }
+        if let n = numDict?.count {
+            count += n
+        }
+        if let n = nullDict?.count {
+            count += n
+        }
+        if let n = dictDict?.count {
+            count += n
+        }
+        if let n = arrayDict?.count {
+            count += n
+        }
+        return count
+    }
+    
+    public init (array:[AnyObject], restrictTypeChanges:Bool = true, anyValueIsNullable:Bool = true) {
+        // AJL: replace with map?
+        self.anyValueIsNullable = anyValueIsNullable
+        self.restrictTypeChanges = restrictTypeChanges
+        for val in enumerate(array) {
+            if let v = val.element as? String {
+                if stringDict == nil {
+                    self.stringDict = Dictionary<Int,String>()
+                }
+                stringDict![val.index] = v
+                
+                
+            }
+            else if let v = val.element as? NSNumber {
+                if numDict == nil {
+                    self.numDict = Dictionary<Int,NSNumber>()
+                }
+                numDict![val.index] = v
+                
+                
+            }
+                
+            else if let v = val.element as? NSNull {
+                if nullDict == nil {
+                    
+                    self.nullDict = Dictionary<Int,NSNull>()
+                }
+                nullDict![val.index] = v
+                    
+                
+            }
+                
+            else if let v = val.element as? Dictionary<String, AnyObject> {
+                if dictDict == nil {
+                    self.dictDict = Dictionary<Int,JSONDictionary>()
+                }
+            
+                    dictDict![val.index] = JSONDictionary(dict: v)
+                    
+            
+                
+                
+                
+            }
+                
+            else if let v = val.element as? [AnyObject] {
+                if arrayDict == nil {
+                    self.arrayDict = Dictionary<Int,JSONArray>()
+                }
+            
+                    arrayDict![val.index] = JSONArray(array: v)
+                
+            }
+            
+        }
+        
+    }
+    
+    public var array:[AnyObject] {
+        
+        var arr = [AnyObject](count: self.count, repeatedValue: [AnyObject]())
+        if stringDict != nil {
+            for (k,v) in stringDict! {
+                arr[k] = v
+            }
+        }
+        if numDict != nil {
+            for (k,v) in numDict! {
+                arr[k] = v
+            }
+        }
+        if nullDict != nil {
+            for (k,v) in nullDict! {
+                arr[k] = v
+            }
+        }
+        
+        if dictDict != nil {
+            for (k,v) in dictDict! {
+                arr[k] = v.dictionary
+            }
+        }
+        if arrayDict != nil {
+            for (k,v) in arrayDict! {
+                arr[k] = v.array
+            }
+        }
+        return arr
+    }
+    
+    
+}
+// JSON conform to SequenceType
+extension JSONArray {
+    public typealias Generator = JSONArrayGenerator
+    public func generate() -> Generator {
+        // AJL: avoid strong capture of self?
+        let gen = Generator(arr: self)
+        return gen
+    }
+}
+
+// methods for returning all strings, numbers, null from an array
+extension JSONArray {
+    
+    public func isStringArray() -> Bool {
+        if stringDict != nil && numDict == nil && nullDict == nil && arrayDict == nil && dictDict == nil {
+            return true
+        }
+        else {
+            return false
+        }
+    }
+    // returns all the values from the string dictionary
+    public func stringArray() -> [String]?  {
+        if let v = stringDict?.values {
+            return map(v){$0}
+        }
+        return nil
+    }
+    
+    public func containsStrings() -> Bool {
+        if stringDict != nil {
+            return true
+        }
+        return false
+    }
+    
+    public func containsNull() -> Bool {
+        if nullDict != nil {
+            return true
+        }
+        return false
+    }
+    
+    
+}
+
+// getting and setting from subscripts
+extension JSONArray {
+    public subscript (key:Int) -> String? {
+        get {
+            
+            return stringDict?[key]
+            
+        }
+        set(newValue) {
+            
+            if stringDict?[key] != nil {
+                stringDict?[key] = newValue
+            }
+            else if nullDict?[key] != nil {
+                nullDict?.removeValueForKey(key)
+                if nullDict?.isEmpty == true {
+                    nullDict = nil
+                }
+                // check to make sure there is a numDict and create one if not
+                if stringDict == nil {
+                    stringDict = Dictionary<Int,String>()
+                }
+                stringDict?[key] = newValue
+            }
+            // the JSONArray type uses nil as an indicator of emptiness, so if the final value/key is removed then the dictionary should reset to nil
+            else if restrictTypeChanges == false {
+                numDict?.removeValueForKey(key)
+                if numDict?.isEmpty == true {
+                    numDict = nil
+                }
+                arrayDict?.removeValueForKey(key)
+                if arrayDict?.isEmpty == true {
+                    arrayDict = nil
+                }
+                dictDict?.removeValueForKey(key)
+                if dictDict?.isEmpty == true {
+                    dictDict = nil
+                }
+                // because nil is an indicator of emptiness, it might be the case that no stringDict exists, and so it must be created if this is the case
+                if stringDict == nil {
+                    stringDict = Dictionary<Int,String>()
+                }
+                stringDict?[key] = newValue
+            }
+        }
+    }
+    
+    public subscript (key:Int) -> NSNumber? {
+        get {
+            return numDict?[key]
+        }
+        set(newValue) {
+            if numDict?[key] != nil  {
+                numDict?[key] = newValue
+            }
+                // if value starts as null, we assume it can be replaced, but there's no way of knowing what it can be replaced with so we must allow anything in the first instance
+            else if nullDict?[key] != nil {
+                nullDict?.removeValueForKey(key)
+                if nullDict?.isEmpty == true {
+                    nullDict = nil
+                }
+                // check to make sure there is a numDict and create one if not
+                if numDict == nil {
+                    numDict = Dictionary<Int,NSNumber>()
+                }
+                numDict?[key] = newValue
+            }
+                // if the restriction of changing types has been turned off then anything can be replaced
+            else if restrictTypeChanges == false {
+                stringDict?.removeValueForKey(key)
+                if stringDict?.isEmpty == true {
+                    stringDict = nil
+                }
+                arrayDict?.removeValueForKey(key)
+                if arrayDict?.isEmpty == true {
+                    arrayDict = nil
+                }
+                dictDict?.removeValueForKey(key)
+                if dictDict?.isEmpty == true {
+                    dictDict = nil
+                }
+                // check to make sure there is a numDict and create one if not
+                if numDict == nil {
+                    numDict = Dictionary<Int,NSNumber>()
+                }
+                // add value to numDict
+                numDict?[key] = newValue
+                
+            }
+        }
+    }
+    
+    public subscript (key:Int) -> NSNull? {
+        get {
+            return nullDict?[key]
+        }
+        set(newValue) {
+            if nullDict?[key] != nil {
+                nullDict?[key] = newValue
+            }
+                // any value is nullable
+            else if anyValueIsNullable == true {
+                numDict?.removeValueForKey(key)
+                if numDict?.isEmpty == true {
+                    numDict = nil
+                }
+                stringDict?.removeValueForKey(key)
+                if stringDict?.isEmpty == true {
+                    stringDict = nil
+                }
+                arrayDict?.removeValueForKey(key)
+                if arrayDict?.isEmpty == true {
+                    arrayDict = nil
+                }
+                dictDict?.removeValueForKey(key)
+                if dictDict?.isEmpty == true {
+                    dictDict = nil
+                }
+                if nullDict == nil {
+                    nullDict = Dictionary<Int,NSNull>()
+                }
+                nullDict?[key] = newValue
+            }
+            
+            
+            
+        }
+    }
+    
+    public subscript (key:Int) -> JSONArray? {
+        get {
+            return arrayDict?[key]
+        }
+        set(newValue) {
+            if arrayDict?[key] != nil {
+                arrayDict?[key] = newValue
+            }
+            else if nullDict?[key] != nil {
+                nullDict?.removeValueForKey(key)
+                if nullDict?.isEmpty == true {
+                    nullDict = nil
+                }
+                // check to make sure there is a numDict and create one if not
+                if arrayDict == nil {
+                    arrayDict = Dictionary<Int,JSONArray>()
+                }
+                arrayDict?[key] = newValue
+            }
+            else if restrictTypeChanges == false {
+                stringDict?.removeValueForKey(key)
+                if stringDict?.isEmpty == true {
+                    stringDict = nil
+                }
+                arrayDict?.removeValueForKey(key)
+                if arrayDict?.isEmpty == true {
+                    arrayDict = nil
+                }
+                dictDict?.removeValueForKey(key)
+                if dictDict?.isEmpty == true {
+                    dictDict = nil
+                }
+                // check to make sure there is a numDict and create one if not
+                if arrayDict == nil {
+                    arrayDict = Dictionary<Int,JSONArray>()
+                }
+                // add value to numDict
+                arrayDict?[key] = newValue
+                
+            }
+
+        }
+    }
+    
+    
+    public subscript (key:Int) -> JSONDictionary? {
+        get {
+            
+            return dictDict?[key]
+            
+        }
+        set(newValue) {
+            if dictDict?[key] != nil {
+                dictDict?[key] = newValue
+            }
+            else if nullDict?[key] != nil {
+                nullDict?.removeValueForKey(key)
+                if nullDict?.isEmpty == true {
+                    nullDict = nil
+                }
+                dictDict?[key] = newValue
+            }
+            else if restrictTypeChanges == false {
+                stringDict?.removeValueForKey(key)
+                if stringDict?.isEmpty == true {
+                    stringDict = nil
+                }
+                arrayDict?.removeValueForKey(key)
+                if arrayDict?.isEmpty == true {
+                    arrayDict = nil
+                }
+                dictDict?.removeValueForKey(key)
+                if dictDict?.isEmpty == true {
+                    dictDict = nil
+                }
+                // check to make sure there is a numDict and create one if not
+                if dictDict == nil {
+                    dictDict = Dictionary<Int,JSONDictionary>()
+                }
+                // add value to numDict
+                dictDict?[key] = newValue
+                
+            }
+        }
+    }
+    
+    
+}
+
+// add methods for dictionary, avoid accidental additions
+extension JSONArray {
+    // Append method
+    public mutating func append(str:String) {
+        if stringDict == nil {
+            stringDict = Dictionary<Int,String>()
+        }
+        if stringDict != nil {
+            stringDict![self.count] = str
+        }
+    }
+    public mutating func append(num:NSNumber) {
+        if stringDict == nil {
+            numDict = Dictionary<Int,NSNumber>()
+        }
+        if numDict != nil {
+            numDict![self.count] = num
+        }
+    }
+    
+    public mutating func append(null:NSNull) {
+        if nullDict == nil {
+            nullDict = Dictionary<Int,NSNull>()
+        }
+        if nullDict != nil {
+            nullDict![self.count] = null
+        }
+    }
+    
+    public mutating func append(dict:JSONDictionary) {
+        if dictDict == nil {
+            dictDict = Dictionary<Int,JSONDictionary>()
+        }
+        if dictDict != nil {
+            dictDict![self.count] = dict
+        }
+    }
+    
+    public mutating func append(arr:JSONArray) {
+        if arrayDict == nil {
+            arrayDict = Dictionary<Int,JSONArray>()
+        }
+        if arrayDict != nil {
+            arrayDict![self.count] = arr
+        }
+    }
+    
+    // TODO: extend() method
+    
+    // TODO: insert() method
+    
+    // TODO: removeAtIndex(), etc. methods
+}
+
+// returning an instance of Value type
+extension JSONArray {
+    
+    public subscript (key:Int) -> Value? {
+        get {
+            
+            if let a = stringDict?[key] {
+                return Value(a)
+            }
+            else if let a = numDict?[key] {
+                return Value(a)
+            }
+                
+            else if let a = nullDict?[key] {
+                return Value(a)
+            }
+                
+            else if let a = dictDict?[key] {
+                return Value.JSONDictionaryType(a)
+            }
+                
+            else if let a = arrayDict?[key] {
+                return Value.JSONArrayType(a)
+            }
+            
+            
+            return nil
+        }
+        
+        
+    }
+    
+    
+    
+}
+
+// return JSON data
+extension JSONArray {
+    public func jsonData() -> NSData? {
+        return NSJSONSerialization.dataWithJSONObject(self.array, options: nil, error: nil)
+    }
+}
+
+// JSONArray Generator
+public struct JSONArrayGenerator:GeneratorType {
+    // use dictionary with index as keys for position in array
+    private let arr:JSONArray
+    private var i:Int
+    
+    init(arr:JSONArray) {
+        self.arr = arr
+        self.i = 0
+    }
+    
+    mutating public func next() -> Value? {
+        
+        if let v:Value? = arr[i] {
+            ++i
+            return v
+        }
+        
+        // reset value
+        i = 0
+        return nil
+    }
+}
+
