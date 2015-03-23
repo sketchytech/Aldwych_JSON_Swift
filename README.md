@@ -46,4 +46,4 @@ For more refined handling of data additional types can be created. If you add th
           
           iT.outputJSON()
       }
-  It's an example of how the data can be filtered but still renconstituted.
+It's an example of how the data can be filtered but still renconstituted. Note: an explanation of the logic and also suitable patterns for building new types for other APIs is planned. 
