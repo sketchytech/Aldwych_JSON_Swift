@@ -24,6 +24,23 @@ These properties can be changed at any time, and of course if the JSON is parsed
 In order to retrieve a value identify its type, e.g. `if let tName = jsonDictionary["trackName"]?.str {}` or `if let rCount = jsonDictionary["resultCount"]?.num {}`
 
 Updates to results can be made like this `jsonDictionary["results"]?[0]?["trackName"] = "Something"`
+#Methods and Properties
+There are a range of methods available that will expand with time. They include among others (to be documented soon):
+##JSONArray
+`jsonArray.append("Hello Swift!")`
+
+`jsonArray.isStringArray()`
+
+`jsonArray.containsStrings()`
+
+`jsonArray.stringArray() // returns only the strings from an array`
+##JSONDictionary
+`jsonDict.keysWithStringValues`
+
+`jsonDict.keysWithNumberValues`
+
+`jsonDict.keysWithDictionaryValues`
+
 #Loops
 
         for (k,v) in jsonDictionary {
