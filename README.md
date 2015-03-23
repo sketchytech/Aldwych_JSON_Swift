@@ -1,4 +1,4 @@
-# Iolcos
+# iolcos
 JSON parser for Swift - for parsing and re-constituting of parsed data.
 
 The name of this repository follows the logic of many other JSON repositories that the name should be derived from some connection to Jason, the Greek mythological hero. Iolcos was Jason's starting point in the myth of the Golden Fleece, and this JSON parser is a new starting point for the parsing of JSON in Swift.
