@@ -7,7 +7,7 @@ To use simply copy the file: Resources/Parser into your app or playground. It wo
 
 To parse NSData simply use `JSONParser.parseDictionary(json:NSData)` or `JSONParser.parseArray(json:NSData)`
 
-In order to retrieve a value identify its type, e.g. `if let jsonDictionary["trackName"]?.str {}` or `if let jsonDictionary["resultCount"]?.num {}`
+In order to retrieve a value identify its type, e.g. `if let tName = jsonDictionary["trackName"]?.str {}` or `if let rCount = jsonDictionary["resultCount"]?.num {}`
 
 Updates to results can be made like this `jsonDictionary["results"]?[0]?["trackName"] = "Something"`
 
