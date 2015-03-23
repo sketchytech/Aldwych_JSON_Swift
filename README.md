@@ -1,6 +1,6 @@
 # Iolcos
 JSON parser for Swift - for parsing and re-constituting of parsed data
-
+#How to
 The code requires the latest Xcode 6.3 Beta installed with Swift 1.2
 
 To use simply copy the file: Resources/Parser into your app or playground. It works with iOS and OS X.
@@ -10,7 +10,24 @@ To parse NSData simply use `JSONParser.parseDictionary(json:NSData)` or `JSONPar
 In order to retrieve a value identify its type, e.g. `if let tName = jsonDictionary["trackName"]?.str {}` or `if let rCount = jsonDictionary["resultCount"]?.num {}`
 
 Updates to results can be made like this `jsonDictionary["results"]?[0]?["trackName"] = "Something"`
+#Loops
 
+        for (k,v) in jsonDictionary {
+            if let aNum = v?.num {
+              println(aNum)
+            }
+        }
+
+and
+
+        for v in jsonArray {
+            if let aNum = v?.num {
+              println(aNum)
+            }
+        }
+
+
+#Round-tripping data
 To round-trip the JSON simply write
 
 `NSJSONSerialization.dataWithJSONObject(jsonDictionary.dictionary, options: NSJSONWritingOptions.PrettyPrinted, error: &error)`
@@ -19,7 +36,8 @@ or
 
 `NSJSONSerialization.dataWithJSONObject(jsonArray.array, options: NSJSONWritingOptions.PrettyPrinted, error: &error)`
 
-For more refined handling of data additional types can be created. If you add the iTunesData file from the Extras folder then code like this can be can be written:
+#Refined Handling
+For more refined handling of data, additional types can be created. If you add the iTunesData file from the Extras folder then code like this can be can be written:
 
     if let url = NSURL(string:"http://itunes.apple.com/search?term=b12&limit=40"),
       data = NSData(contentsOfURL: url),
