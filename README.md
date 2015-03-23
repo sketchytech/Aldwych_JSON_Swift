@@ -39,29 +39,26 @@ or
 #Refined Handling
 For more refined handling of data, additional types can be created. If you add the iTunesData file from the Extras folder then code like this can be can be written:
 
-    if let url = NSURL(string:"http://itunes.apple.com/search?term=b12&limit=40"),
-      data = NSData(contentsOfURL: url),
-      parsedJSON = JSONParser.parseDictionary(data),
-      iTD = iTunesData(dict: parsedJSON)
-     {
+    var data:NSData?
+    if let url = NSURL(string:"https://itunes.apple.com/search?term=b12&limit=10"),
+        d = NSData(contentsOfURL: url) {
+          data = d
+    }
+    if let data = data,
+        parsedJSON = JSONParser.parseDictionary(data),
+        iTD = iTunesData(dict: parsedJSON) {
         var tracks = map(iTD.results, {x in Track(dict:x.jsonDict)})
-      
+        let m = map(tracks,{x in "Title: \(x!.trackName), Album: \(x!.collectionName)\n"})
+        println(join("\n",m))
         tracks[1]?.trackName = "New Name"
         tracks[1]?.trackName
-          
         var iT = iTD
         if let track = tracks[1] {
-          iT.updateTrackDetails(track)
-          }
-          tracks = map(iT.results, {x in Track(dict:x.jsonDict)})
-          
-          for t in tracks {
-          if let tName = t?.trackName,
-          cName = t?.collectionName {
-          print("Track: \(tName) \n Collection: \(cName) \n")
-          }
-          }
-          
-          iT.outputJSON()
-      }
+            iT.updateTrackDetails(track)
+        }
+        tracks = map(iT.results, {x in Track(dict:x.jsonDict)})
+        let m2 = map(tracks,{x in "Title: \(x!.trackName), Album: \(x!.collectionName)\n"})
+        println(join("\n",m2))
+        iT.outputJSON()?.writeToFile("/tmp/b12.json", atomically: false)
+    }
 It's an example of how the data can be filtered but still renconstituted. Note: an explanation of the logic and also suitable patterns for building new types for other APIs is planned. 
