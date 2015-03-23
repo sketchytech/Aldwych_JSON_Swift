@@ -66,6 +66,7 @@ For more refined handling of data, additional types can be created. If you add t
         iT.outputJSON()?.writeToFile("/tmp/b12.json", atomically: false)
     }
 It's an example of how the data can be filtered but still renconstituted. Note: an explanation of the logic and also suitable patterns for building new types for other APIs is planned. 
-
+#Future Functionality
+At present types cannot be changed, so if a value is a String it can be only changed to another String, not a number or a dictionary, or an array. In the next update there will be a property that can be changed to enable changes of type if these are desired. There will also be choice of whether or not to allow values to become null by default this will be true but it can be turned off while still assuming that any null value can become something other than null.
 #Contact
 You can get in touch on twitter [@sketchyTech](http://twitter.com/sketchyTech).
