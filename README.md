@@ -11,11 +11,11 @@ To use simply copy the contents of the Sources folder into your app or playgroun
 ##Parse JSON Data
 To parse NSData simply use
 
-`JSONParser.parseDictionary(json:NSData, restrictTypeChanges:Bool = true, anyValueIsNullable:Bool = true) -> JSONDictionary`
+`JSONParser.parseDictionary(json:NSData, restrictTypeChanges:Bool = true, anyValueIsNullable:Bool = true) -> JSONDictionary?`
 
 or 
 
-`JSONParser.parseArray(json:NSData, restrictTypeChanges:Bool = true, anyValueIsNullable:Bool = true)  -> JSONArray`
+`JSONParser.parseArray(json:NSData, restrictTypeChanges:Bool = true, anyValueIsNullable:Bool = true)  -> JSONArray?`
 
 Default settings do not allow changes of type but do allow values to become null. To enable changes of type change **restrictTypeChanges** to **false** and to prevent nullability of values change **anyValueIsNullable** to **false**.
 
