@@ -95,7 +95,8 @@ Then type changes would be freely permitted. But this behaviour changes again if
     myJSON["Third"] = 1 // 1
     myJSON.restrictTypeChanges = true
     myJSON["Third"] = "Two" // 1
-    
+
+By default these settings and changes are inherited by nested JSONDictionary and JSONArray types, but this can be changed by setting the `inheritRestrictions` to false on the top level object.
 #Methods and Properties
 There are a range of methods available that will expand with time. They include among others (to be documented soon):
 ##JSONArray
