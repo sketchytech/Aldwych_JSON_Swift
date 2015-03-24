@@ -76,7 +76,7 @@ public struct JSONArray:SequenceType {
                     self.dictDict = Dictionary<Int,JSONDictionary>()
                 }
             
-                    dictDict![val.index] = JSONDictionary(dict: v)
+                    dictDict![val.index] = JSONDictionary(dict: v, restrictTypeChanges: restrictTypeChanges, anyValueIsNullable: anyValueIsNullable)
                     
             
                 
@@ -89,7 +89,7 @@ public struct JSONArray:SequenceType {
                     self.arrayDict = Dictionary<Int,JSONArray>()
                 }
             
-                    arrayDict![val.index] = JSONArray(array: v)
+                    arrayDict![val.index] = JSONArray(array: v, restrictTypeChanges: restrictTypeChanges, anyValueIsNullable: anyValueIsNullable)
                 
             }
             
@@ -442,9 +442,121 @@ extension JSONArray {
         }
     }
     
+}
+
+extension JSONArray {
+    // insert function
+    mutating func updatePositions(fromIndex:Int,by:Int = 1) {
+        
+        if var strD = stringDict
+        {
+            // update stringDict
+            for (k,v) in strD {
+                if k >= fromIndex {
+                    strD[k+by] = v
+                }
+            }
+            stringDict = strD
+        }
+        if var numD = numDict
+        {
+            // update numDict
+            for (k,v) in numD {
+                if k >= fromIndex {
+                    numD[k+by] = v
+                }
+            }
+            numDict = numD
+        }
+        
+        if var nulD = nullDict
+        {
+            // update nullDict
+            for (k,v) in nulD {
+                if k >= fromIndex {
+                    nulD[k+by] = v
+                }
+            }
+            nullDict = nulD
+        }
+        
+        if var arrD = arrayDict
+        {
+            // update arrayDict
+            for (k,v) in arrD {
+                if k >= fromIndex {
+                    arrD[k+by] = v
+                }
+            }
+            arrayDict = arrD
+        }
+        
+        if var dictD = dictDict
+        {
+            // update dictDict
+            for (k,v) in dictD {
+                if k >= fromIndex {
+                    dictD[k+by] = v
+                }
+            }
+            dictDict = dictD
+        }
+    }
+    // insert method
+    public mutating func insert(str:String, atIndex:Int) {
+        
+        if self.count-1 >= atIndex {
+            updatePositions(atIndex)
+            if stringDict == nil {
+                stringDict = Dictionary<Int,String>()
+            }
+            stringDict?[atIndex] = str
+        }
+        
+    }
+    public mutating func insert(num:NSNumber, atIndex:Int) {
+        if self.count-1 >= atIndex {
+            updatePositions(atIndex)
+            if numDict == nil {
+                numDict = Dictionary<Int,NSNumber>()
+            }
+            numDict?[atIndex] = num
+        }
+    }
+    
+    public mutating func insert(null:NSNull, atIndex:Int) {
+        if self.count-1 >= atIndex {
+            updatePositions(atIndex)
+            if nullDict == nil {
+                nullDict = Dictionary<Int,NSNull>()
+            }
+            nullDict?[atIndex] = null
+        }
+    }
+    
+    public mutating func insert(dict:JSONDictionary, atIndex:Int) {
+        if self.count-1 >= atIndex {
+            updatePositions(atIndex)
+            if dictDict == nil {
+                dictDict = Dictionary<Int,JSONDictionary>()
+            }
+            dictDict?[atIndex] = dict
+        }
+    }
+    
+    public mutating func insert(arr:JSONArray, atIndex:Int) {
+        if self.count-1 >= atIndex {
+            updatePositions(atIndex)
+            if arrayDict == nil {
+                arrayDict = Dictionary<Int,JSONArray>()
+            }
+            arrayDict?[atIndex] = arr
+        }
+    }
+    
     // TODO: extend() method
     
-    // TODO: insert() method
+    
     
     // TODO: removeAtIndex(), etc. methods
 }
