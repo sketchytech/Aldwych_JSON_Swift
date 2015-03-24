@@ -31,11 +31,11 @@ There are a range of methods available that will expand with time. They include 
 
 `jsonArray.insert("Hello Swift!",atIndex:2) // can be used for strings, numbers, JSONArray, JSONDictiony, NSNull`
 
-`jsonArray.isStringArray()`
+`jsonArray.isStringArray() -> Bool // i.e. is exclusively composed of strings, nothing else`
 
-`jsonArray.containsStrings()`
+`jsonArray.containsStrings() -> Bool // has strings within array`
 
-`jsonArray.stringArray() // returns only the strings from an array`
+`jsonArray.stringArray() -> [String]? // returns only the strings from an array`
 ##JSONDictionary
 `jsonDict.keysWithStringValues`
 
