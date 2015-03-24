@@ -34,6 +34,27 @@ These properties can be changed at any time, and of course if the JSON is parsed
 In order to retrieve a value identify its type, e.g. `if let tName = jsonDictionary["trackName"]?.str {}` or `if let rCount = jsonDictionary["resultCount"]?.num {}`
 
 Updates to results can be made like this `jsonDictionary["results"]?[0]?["trackName"] = "Something"`
+#Creation of JSON
+    
+    let myDictionary = ["First":9,"Second":1,"Third":"Two"]
+    var myJSON = JSONDictionary(dict:myDictionary)
+    // A JSONDictionary instance has been created
+    myJSON["Third"] = "One"
+    // A string key with string value has been added
+    myJSON["Fourth"] = myJSON
+    // A copy of the JSONDictionary has been added creating a nest
+    if let aStr = myJSON["Fourth"]?["Third"]?.str {
+        println(aStr)
+    }
+    // A value is extracted from the nested JSONDictionary
+    myJSON.jsonData()?.writeToFile("/tmp/myJSON.json", atomically: false)
+    // JSON has now been written to /tmp directory
+
+Once the JSON has been created in this way, the file you created will contain text that looks like this:
+
+`{"First":9,"Fourth":{"Second":1,"First":9,"Third":"One"},"Third":"One","Second":1}`
+
+Or similar (remember dictionaries are not ordered in the way that arrays are).
 #Methods and Properties
 There are a range of methods available that will expand with time. They include among others (to be documented soon):
 ##JSONArray
@@ -79,11 +100,9 @@ and
 #Round-tripping data
 To round-trip the JSON simply write
 
-`NSJSONSerialization.dataWithJSONObject(jsonDictionary.dictionary, options: NSJSONWritingOptions.PrettyPrinted, error: &error)`
+`myJSON.jsonData(options:NSJSONWritingOptions = nil, error:NSErrorPointer = nil) -> NSData?`
 
-or
-
-`NSJSONSerialization.dataWithJSONObject(jsonArray.array, options: NSJSONWritingOptions.PrettyPrinted, error: &error)`
+it works for JSONDictionary and JSONArray
 
 #Refined Handling
 For more refined handling of data, additional types can be created. If you add the iTunesData file from the Extras folder then code like this can be can be written:
