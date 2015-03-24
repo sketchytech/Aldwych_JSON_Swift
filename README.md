@@ -10,13 +10,13 @@ The guiding principles of the parser are:
 * the programmer implementing the parser can choose (and easily alter) the interpretation of type safety used for altering values
 * JSON can not only be parsed but also created from scratch in a type safe manner
 
-#Name
+#Naming
 The name of this repository follows the logic of many other JSON repositories that the name should be derived from some connection to Jason, the Greek mythological hero. Iolcos was Jason's starting point in the myth of the Golden Fleece, and this JSON parser is a new starting point for the parsing of JSON in Swift.
 #Capabilities and Requirements
-The parser is capable of handling JSON that has been loaded as NSData and which follows an array or string : value dictionary format. (In other words standard JSON.)
-#How to
-The code requires the latest Xcode 6.3 Beta installed with Swift 1.2
+The parser is capable of handling JSON that has been loaded as NSData and which follows an array or string : value dictionary format. (In other words standard JSON.) It is also capable of creating JSON data from scratch.
 
+The code requires the latest Xcode 6.3 Beta installed with Swift 1.2
+#How to Use
 To use simply copy the contents of the Sources folder into your app or playground. It works with iOS and OS X.
 ##Parse JSON Data
 To parse NSData simply use
