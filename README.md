@@ -7,8 +7,9 @@ The guiding principles of the parser are:
 * it will enable the structure of the data to be interrogated without any foreknowledge of the values and keys contained
 * JSON should remain editable and be able to be reconstituted easily
 * internally the types used to manipulate the JSON are type safe and do not store AnyObject values
-* the programmer implementing the parser can choose (and easily alter) the interpretation of type safety used for altering values
+* the programmer implementing the parser can choose (and easily alter) the interpretation of type safety used for values
 * JSON can not only be parsed but also created from scratch in a type safe manner
+* structure of JSON can be further refined through adding API specific types. This can reduce the size of manipulated data for use in UITableView, etc., while still making it possible to edit and reconstitute.
 
 #Naming
 The name of this repository follows the logic of many other JSON repositories that the name should be derived from some connection to Jason, the Greek mythological hero. Iolcos was Jason's starting point in the myth of the Golden Fleece, and this JSON parser is a new starting point for the parsing of JSON in Swift.
