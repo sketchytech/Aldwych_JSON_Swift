@@ -97,5 +97,7 @@ For more refined handling of data, additional types can be created. If you add t
 It's an example of how the data can be filtered but still renconstituted. Note: an explanation of the logic and also suitable patterns for building new types for other APIs is planned. 
 #Future Functionality
 The aim is to enable the JSONDictionary and JSONArray types to mirror the functionality of Dictionary and Array and to have them adhere to the same protocols. Some of this is already in place and the exact methods and properties that are accessible will be listed here soon.
+
+At present insert and append methods do not restrict type at all. It will be considered how type safety might be applied here so as to restrict the corruption of JSON structure and data. However, if this is a concern then it may well be the place of refined handling types to ensure illegal changes are not made to data.
 #Contact
 You can get in touch on twitter [@sketchyTech](http://twitter.com/sketchyTech).
