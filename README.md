@@ -1,5 +1,5 @@
 # iolcos
-JSON parser for Swift - for parsing and reconstituting of parsed data.
+JSON parser/creator for Swift - for parsing, creating and reconstituting of parsed data.
 #Guiding Principles
 The guiding principles of the parser are:
 
