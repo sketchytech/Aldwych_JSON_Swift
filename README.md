@@ -36,8 +36,7 @@ In order to retrieve a value identify its type, e.g. `if let tName = jsonDiction
 Updates to results can be made like this `jsonDictionary["results"]?[0]?["trackName"] = "Something"`
 #Creation of JSON
     
-    let myDictionary = ["First":9,"Second":1,"Third":"Two"]
-    var myJSON = JSONDictionary(dict:myDictionary)
+    var myJSON = JSONDictionary()
     // A JSONDictionary instance has been created
     myJSON["Third"] = "One"
     // A string key with string value has been added
@@ -52,9 +51,19 @@ Updates to results can be made like this `jsonDictionary["results"]?[0]?["trackN
 
 Once the JSON has been created in this way, the file you created will contain text that looks like this:
 
-`{"First":9,"Fourth":{"Second":1,"First":9,"Third":"One"},"Third":"One","Second":1}`
+`{"Fourth":{"Third":"One"},"Third":"One"}`
 
 Or similar (remember dictionaries are not ordered in the way that arrays are).
+##Initialize with Dictionary<String,T>
+It's also possible to initialize the JSONDictionary using a Swift Dictionary, e.g.
+
+    let myDictionary = ["First":9,"Second":1,"Third":"Two"]
+    var myJSON = JSONDictionary(dict:myDictionary)
+
+The created JSON:
+
+`{"First":9,"Fourth":{"Second":1,"First":9,"Third":"One"},"Third":"One","Second":1}`
+
 #Methods and Properties
 There are a range of methods available that will expand with time. They include among others (to be documented soon):
 ##JSONArray
