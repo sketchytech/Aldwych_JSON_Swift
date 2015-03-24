@@ -12,7 +12,7 @@ The guiding principles of the parser are:
 * structure of JSON can be further refined through adding API specific types. This can reduce the size of manipulated data for use in UITableView, etc., while still making it possible to edit and reconstitute.
 
 #Naming
-The name of this repository follows the logic of many other JSON repositories that the name should be derived from some connection to Jason, the Greek mythological hero. Iolcos was Jason's starting point in the myth of the Golden Fleece, and this JSON parser is a new starting point for the parsing of JSON in Swift.
+The name of this repository follows the logic of many other JSON repositories in that the name is derived from some connection to Jason, the Greek mythological hero. Iolcos was Jason's starting point in the myth of the Golden Fleece, and this JSON parser is a new starting point for the parsing of JSON in Swift.
 #Capabilities and Requirements
 The parser is capable of handling JSON that has been loaded as NSData and which follows an array or string : value dictionary format. (In other words standard JSON.) It is also capable of creating JSON data from scratch.
 
