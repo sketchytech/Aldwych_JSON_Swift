@@ -37,11 +37,12 @@ There are a range of methods available that will expand with time. They include 
 
 `jsonArray.stringArray() -> [String]? // returns only the strings from an array`
 ##JSONDictionary
-`jsonDict.keysWithStringValues`
+`jsonDict.keysWithStringValues: [String]? {get}`
 
-`jsonDict.keysWithNumberValues`
+`jsonDict.keysWithNumberValues: [String]? {get}`
 
-`jsonDict.keysWithDictionaryValues`
+
+`jsonDict.keysWithDictionaryValues: [String]? {get}`
 
 #Loops
 
