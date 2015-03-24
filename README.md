@@ -4,7 +4,7 @@ JSON parser/creator for Swift - for parsing, editing, creating and reconstitutin
 The guiding principles of the parser are:
 
 * it should be able to take any valid JSON dictionary or array
-* it will enable the structure of the data to be interogated without any foreknowledge of the values and keys contained
+* it will enable the structure of the data to be interrogated without any foreknowledge of the values and keys contained
 * JSON should remain editable and be able to be reconstituted easily
 * internally the types used to manipulate the JSON are type safe and do not store AnyObject values
 * the programmer implementing the parser can choose (and easily alter) the interpretation of type safety used for altering values
