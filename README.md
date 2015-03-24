@@ -27,7 +27,9 @@ Updates to results can be made like this `jsonDictionary["results"]?[0]?["trackN
 #Methods and Properties
 There are a range of methods available that will expand with time. They include among others (to be documented soon):
 ##JSONArray
-`jsonArray.append("Hello Swift!")`
+`jsonArray.append("Hello Swift!") // can be used for strings, numbers, JSONArray, JSONDictiony, NSNull`
+
+`jsonArray.insert("Hello Swift!",atIndex:2) // can be used for strings, numbers, JSONArray, JSONDictiony, NSNull`
 
 `jsonArray.isStringArray()`
 
