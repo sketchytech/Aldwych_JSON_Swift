@@ -11,8 +11,8 @@ import Foundation
 public struct JSONArray:SequenceType {
     //TODO: make restrictions work for nest dictionaries when changed after initialization
     public var inheritRestrictions = true
-    public var restrictTypeChanges:Bool = true
-    public var anyValueIsNullable:Bool = true
+    public var restrictTypeChanges:Bool
+    public var anyValueIsNullable:Bool
     // use dictionary with index as keys for position in array
     private var stringDict:Dictionary<Int,String>?
     private var numDict:Dictionary<Int,NSNumber>?
