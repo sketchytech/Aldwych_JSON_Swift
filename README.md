@@ -79,12 +79,22 @@ By default we cannot change type once it is set. For example:
     myJSON["Third"] = "Two" // "Two"
 
 But if we were to do this:
+    
     var myJSON = JSONDictionary(restrictTypeChanges: false)
     // A JSONDictionary instance has been created
     myJSON["Third"] = "One" // "One"
     myJSON["Third"] = 1 // 1
     myJSON["Third"] = "Two" // "Two"
 
+Then type changes would be freely permitted. But this behaviour changes again if the `restrictTypeChanges` property is later set back to true:
+
+    var myJSON = JSONDictionary(restrictTypeChanges: false)
+    // A JSONDictionary instance has been created
+    myJSON["Third"] = "One" // "One"
+    myJSON["Third"] = 1 // 1
+    myJSON.restrictTypeChanges = true
+    myJSON["Third"] = "Two" // 1
+    
 #Methods and Properties
 There are a range of methods available that will expand with time. They include among others (to be documented soon):
 ##JSONArray
