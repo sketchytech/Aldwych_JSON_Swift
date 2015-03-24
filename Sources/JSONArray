@@ -9,8 +9,10 @@ import Foundation
 
 // initialization of JSONArray type
 public struct JSONArray:SequenceType {
-    public var restrictTypeChanges:Bool
-    public var anyValueIsNullable:Bool
+    //TODO: make restrictions work for nest dictionaries when changed after initialization
+    public var inheritRestrictions = true
+    public var restrictTypeChanges:Bool = true
+    public var anyValueIsNullable:Bool = true
     // use dictionary with index as keys for position in array
     private var stringDict:Dictionary<Int,String>?
     private var numDict:Dictionary<Int,NSNumber>?
@@ -308,7 +310,14 @@ extension JSONArray {
     
     public subscript (key:Int) -> JSONArray? {
         get {
-            return arrayDict?[key]
+            var arrayD = self.arrayDict?[key]
+            
+            if inheritRestrictions == true {
+                arrayD?.restrictTypeChanges = self.restrictTypeChanges
+                arrayD?.anyValueIsNullable = self.anyValueIsNullable
+            }
+
+            return arrayD
         }
         set(newValue) {
             if arrayDict?[key] != nil {
@@ -353,8 +362,14 @@ extension JSONArray {
     
     public subscript (key:Int) -> JSONDictionary? {
         get {
+            var dictD = self.dictDict?[key]
             
-            return dictDict?[key]
+            if inheritRestrictions == true {
+                dictD?.restrictTypeChanges = self.restrictTypeChanges
+                dictD?.anyValueIsNullable = self.anyValueIsNullable
+            }
+            
+            return dictD
             
         }
         set(newValue) {
@@ -445,7 +460,7 @@ extension JSONArray {
 }
 
 extension JSONArray {
-    // insert function
+    // extension to enable insert method
     mutating func updatePositions(fromIndex:Int,by:Int = 1) {
         
         if var strD = stringDict
@@ -502,7 +517,7 @@ extension JSONArray {
             dictDict = dictD
         }
     }
-    // insert method
+ 
     public mutating func insert(str:String, atIndex:Int) {
         
         if self.count-1 >= atIndex {
@@ -556,8 +571,6 @@ extension JSONArray {
     
     // TODO: extend() method
     
-    
-    
     // TODO: removeAtIndex(), etc. methods
 }
 
@@ -599,8 +612,8 @@ extension JSONArray {
 
 // return JSON data
 extension JSONArray {
-    public func jsonData() -> NSData? {
-        return NSJSONSerialization.dataWithJSONObject(self.array, options: nil, error: nil)
+    public func jsonData(options:NSJSONWritingOptions = nil, error:NSErrorPointer = nil) -> NSData? {
+        return NSJSONSerialization.dataWithJSONObject(self.array, options: options, error: error)
     }
 }
 
