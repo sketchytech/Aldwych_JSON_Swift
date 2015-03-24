@@ -42,8 +42,10 @@ Updates to results can be made like this `jsonDictionary["results"]?[0]?["trackN
     // A string key with string value has been added
     myJSON["Fourth"] = myJSON
     // A copy of the JSONDictionary has been added creating a nest
+    myJSON["Fourth"]?["Third"] = "Two"
+    // a nested value is changed
     if let aStr = myJSON["Fourth"]?["Third"]?.str {
-        println(aStr)
+        println(aStr) // Two
     }
     // A value is extracted from the nested JSONDictionary
     myJSON.jsonData()?.writeToFile("/tmp/myJSON.json", atomically: false)
@@ -51,7 +53,7 @@ Updates to results can be made like this `jsonDictionary["results"]?[0]?["trackN
 
 Once the JSON has been created in this way, the file you created will contain text that looks like this:
 
-`{"Fourth":{"Third":"One"},"Third":"One"}`
+`{"Fourth":{"Third":"Two"},"Third":"One"}`
 
 Or similar (remember dictionaries are not ordered in the way that arrays are).
 ##Initialize with Dictionary<String,T>
@@ -59,10 +61,29 @@ It's also possible to initialize the JSONDictionary using a Swift Dictionary, e.
 
     let myDictionary = ["First":9,"Second":1,"Third":"Two"]
     var myJSON = JSONDictionary(dict:myDictionary)
+    myJSON.jsonData()?.writeToFile("/tmp/myJSON.json", atomically: false)
+    // JSON has now been written to /tmp directory
 
 The created JSON:
 
-`{"First":9,"Fourth":{"Second":1,"First":9,"Third":"One"},"Third":"One","Second":1}`
+`{"First":9,"Second":1,"Third":"Two"}`
+
+Creating JSON using **iolcos** means that you can take advantage of all the associated methods and properties while forgetting about AnyObject and casting. It is also type safe.
+#Type Safety
+By default we cannot change type once it is set. For example:
+    
+    var myJSON = JSONDictionary()
+    // A JSONDictionary instance has been created
+    myJSON["Third"] = "One" // "One"
+    myJSON["Third"] = 1 // "One"
+    myJSON["Third"] = "Two" // "Two"
+
+But if we were to do this:
+    var myJSON = JSONDictionary(restrictTypeChanges: false)
+    // A JSONDictionary instance has been created
+    myJSON["Third"] = "One" // "One"
+    myJSON["Third"] = 1 // 1
+    myJSON["Third"] = "Two" // "Two"
 
 #Methods and Properties
 There are a range of methods available that will expand with time. They include among others (to be documented soon):
