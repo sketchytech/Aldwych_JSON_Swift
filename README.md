@@ -1,4 +1,4 @@
-# iolcos
+# Aldwych (formerly iolcos)
 JSON parser/creator for Swift - for parsing, editing, creating and reconstituting of parsed data.
 #Guiding Principles
 The guiding principles of the parser are:
@@ -12,7 +12,7 @@ The guiding principles of the parser are:
 * structure of JSON can be further refined through adding API specific types. This can reduce the size of manipulated data for use in UITableView, etc., while still making it possible to edit and reconstitute.
 
 #Naming
-The name of this repository follows the logic of many other JSON repositories in that the name is derived from some connection to Jason, the Greek mythological hero. Iolcos was Jason's starting point in the myth of the Golden Fleece, and this JSON parser is a new starting point for the parsing of JSON in Swift.
+The name of this repository ~~follows the logic of many other JSON repositories in that the name is derived from some connection to Jason, the Greek mythological hero. Iolcos was Jason's starting point in the myth of the Golden Fleece, and this JSON parser is a new starting point for the parsing of JSON in Swift.~~ is randomly grabbed from a London street name. Really it makes no sense, because Aldwych is a one-way street and this parser is the opposite. It's all about working in two directions, but hey it sounded punchier than iolcos. (Note: a part of me wanted to call it Vodka &ndash; SwiftSummit 2015.) 
 #Capabilities and Requirements
 The parser is capable of handling JSON that has been loaded as NSData and which follows an array or string : value dictionary format. (In other words standard JSON.) It is also capable of creating JSON data from scratch.
 
@@ -69,7 +69,7 @@ The created JSON:
 
 `{"First":9,"Second":1,"Third":"Two"}`
 
-Creating JSON using **iolcos** means that you can take advantage of all the associated methods and properties while forgetting about AnyObject and casting. It is also type safe.
+Creating JSON using **Aldwych** means that you can take advantage of all the associated methods and properties while forgetting about AnyObject and casting. It is also type safe.
 #Type Safety
 By default we cannot change type once it is set. For example:
     
