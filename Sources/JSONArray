@@ -616,7 +616,15 @@ extension JSONArray {
         return NSJSONSerialization.dataWithJSONObject(self.array, options: options, error: error)
     }
 }
-
+extension JSONArray {
+    mutating func removeLast() {
+            let a = self.count-1
+            stringDict?.removeValueForKey(a)
+            numDict?.removeValueForKey(a)
+            nullDict?.removeValueForKey(a)
+            arrayDict?.removeValueForKey(a)
+            dictDict?.removeValueForKey(a)
+}
 // JSONArray Generator
 public struct JSONArrayGenerator:GeneratorType {
     // use dictionary with index as keys for position in array
