@@ -9,7 +9,7 @@ if let url = NSBundle.mainBundle().pathForResource("test", ofType: "xml"),
                 println(a.parse(d).dictionary)
         }
 ```
-I'll be blogging about this feature soon and also adding a JSON to XML export feature in the near future.
+I'll be [blogging](http://sketchytech.blogspot.com) about this feature soon and also adding a JSON to XML export feature in the near future.
 #Guiding Principles
 The guiding principles of the parser are:
 
