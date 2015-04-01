@@ -1,5 +1,15 @@
 # Aldwych (formerly iolcos)
 JSON parser/creator for Swift &ndash; for parsing, editing, creating and reconstituting of parsed data.
+## Just added: XML to JSON Parsing
+```
+if let url = NSBundle.mainBundle().pathForResource("test", ofType: "xml"),
+        d = NSData(contentsOfFile: url)
+             {
+            let a = XMLParser()
+                println(a.parse(d).dictionary)
+        }
+```
+I'll be blogging about this feature soon and also adding a JSON to XML export feature in the near future.
 #Guiding Principles
 The guiding principles of the parser are:
 
