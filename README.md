@@ -2,12 +2,13 @@
 JSON parser/creator for Swift &ndash; for parsing, editing, creating and reconstituting of parsed data.
 ## Just added: XML to JSON Parsing
 ```
+var error:NSError?
 if let url = NSBundle.mainBundle().pathForResource("test", ofType: "xml"),
-        d = NSData(contentsOfFile: url)
-             {
-            let a = XMLParser()
-                println(a.parse(d).dictionary)
-        }
+   d = NSData(contentsOfFile: url)
+   {
+        let a = XMLParser()
+        let jsonData = a.parse(d).jsonData(options: NSJSONWritingOptions.PrettyPrinted, error: &error)
+   }
 ```
 I'll be [blogging](http://sketchytech.blogspot.com) about this feature soon and also adding a JSON to XML export feature in the near future.
 #Guiding Principles
