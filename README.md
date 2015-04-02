@@ -7,7 +7,7 @@ if let url = NSBundle.mainBundle().pathForResource("test", ofType: "xml"),
    d = NSData(contentsOfFile: url)
    {
         let a = XMLParser()
-        let jsonData = a.parse(d).jsonData(options: NSJSONWritingOptions.PrettyPrinted, error: &error)
+        let jsonData = a.parse(d).jsonData(options: nil, error: &error)
    }
 ```
 I'll be [blogging](http://sketchytech.blogspot.com) about this feature soon and also adding a JSON to XML export feature in the near future.
