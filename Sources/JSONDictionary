@@ -62,7 +62,6 @@ public struct JSONDictionary:SequenceType {
         self.restrictTypeChanges = restrictTypeChanges
         
     }
-    // Must take AnyObject NOT generic T
     public init (dict:Dictionary<String,AnyObject>, restrictTypeChanges:Bool = true, anyValueIsNullable:Bool = true) {
         self.anyValueIsNullable = anyValueIsNullable
         self.restrictTypeChanges = restrictTypeChanges
@@ -502,6 +501,22 @@ extension JSONDictionary {
 extension JSONDictionary {
     public func jsonData(options:NSJSONWritingOptions = nil, error:NSErrorPointer = nil)->NSData? {
         return NSJSONSerialization.dataWithJSONObject(self.dictionary, options: options, error: error)
+    }
+    public func stringify(options:NSJSONWritingOptions = nil, error:NSErrorPointer = nil)->String? {
+        if let data = NSJSONSerialization.dataWithJSONObject(self.dictionary, options: options, error: error) {
+            let count = data.length / sizeof(UInt8)
+            
+            // create array of appropriate length:
+            var array = [UInt8](count: count, repeatedValue: 0)
+            
+            // copy bytes into array
+            data.getBytes(&array, length:count * sizeof(UInt8))
+            
+            
+            return String(bytes: array, encoding: NSUTF8StringEncoding)
+
+        }
+        else {return nil }
     }
 }
 
