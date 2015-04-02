@@ -11,6 +11,8 @@ if let url = NSBundle.mainBundle().pathForResource("test", ofType: "xml"),
    }
 ```
 I'll be [blogging](http://sketchytech.blogspot.com) about this feature soon and also adding a JSON to XML export feature in the near future.
+
+Also added a stringify() method to JSONArray and JSONDictionary.
 #Guiding Principles
 The guiding principles of the parser are:
 
