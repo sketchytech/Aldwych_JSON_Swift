@@ -40,7 +40,11 @@ public struct JSONArray:SequenceType {
         }
         return count
     }
-    // Must take AnyObject NOT generic T
+    public init (restrictTypeChanges:Bool = true, anyValueIsNullable:Bool = true) {
+        self.anyValueIsNullable = anyValueIsNullable
+        self.restrictTypeChanges = restrictTypeChanges
+        
+    }
     public init (array:[AnyObject], restrictTypeChanges:Bool = true, anyValueIsNullable:Bool = true) {
         // AJL: replace with map?
         self.anyValueIsNullable = anyValueIsNullable
@@ -142,7 +146,16 @@ extension JSONArray {
         return gen
     }
 }
-
+extension JSONArray {
+    mutating func removeLast() {
+            let a = self.count-1
+            stringDict?.removeValueForKey(a)
+            numDict?.removeValueForKey(a)
+            nullDict?.removeValueForKey(a)
+            arrayDict?.removeValueForKey(a)
+            dictDict?.removeValueForKey(a)
+}
+}
 // methods for returning all strings, numbers, null from an array
 extension JSONArray {
     
@@ -175,7 +188,12 @@ extension JSONArray {
         }
         return false
     }
-    
+    public func dictionaryArray() -> [JSONDictionary]?  {
+        if let v = dictDict?.values {
+            return map(v){$0}
+        }
+        return nil
+    }
     
 }
 
@@ -615,16 +633,26 @@ extension JSONArray {
     public func jsonData(options:NSJSONWritingOptions = nil, error:NSErrorPointer = nil) -> NSData? {
         return NSJSONSerialization.dataWithJSONObject(self.array, options: options, error: error)
     }
+    
+    public func stringify(options:NSJSONWritingOptions = nil, error:NSErrorPointer = nil)->String? {
+        if let data = NSJSONSerialization.dataWithJSONObject(self.array, options: options, error: error) {
+            let count = data.length / sizeof(UInt8)
+            
+            // create array of appropriate length:
+            var array = [UInt8](count: count, repeatedValue: 0)
+            
+            // copy bytes into array
+            data.getBytes(&array, length:count * sizeof(UInt8))
+            
+            
+            return String(bytes: array, encoding: NSUTF8StringEncoding)
+            
+        }
+        else {return nil }
+    }
+
 }
-extension JSONArray {
-    mutating func removeLast() {
-            let a = self.count-1
-            stringDict?.removeValueForKey(a)
-            numDict?.removeValueForKey(a)
-            nullDict?.removeValueForKey(a)
-            arrayDict?.removeValueForKey(a)
-            dictDict?.removeValueForKey(a)
-}
+
 // JSONArray Generator
 public struct JSONArrayGenerator:GeneratorType {
     // use dictionary with index as keys for position in array
