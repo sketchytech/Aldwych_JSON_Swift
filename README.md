@@ -10,7 +10,14 @@ if let url = NSBundle.mainBundle().pathForResource("test", ofType: "xml"),
         let jsonData = a.parse(d).jsonData(options: nil, error: &error)
    }
 ```
-I'll be [blogging](http://sketchytech.blogspot.com) about this feature soon and also adding a JSON to XML export feature in the near future.
+Going back the other way:
+```
+if let json = JSONParser.parseDictionary(data),
+   str = XMLParser.json2xml(json) {
+    // if the json was of a type that could be converted to XML, i.e. it follows the same structure as XML output by the parse() method of XMLParser, then a valid XML string will be return, else nil will be returned
+   }
+```
+Read more about XML to JSON parsing in Aldwych here [blogging](http://sketchytech.blogspot.com).
 
 Also added a stringify() method to JSONArray and JSONDictionary.
 #Guiding Principles
