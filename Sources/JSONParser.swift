@@ -10,19 +10,19 @@ import Foundation
 
 // receive data
 public struct JSONParser {
-    public static func parseDictionary(json:NSData) -> JSONDictionary? {
+    public static func parseDictionary(json:NSData, restrictTypeChanges:Bool = true, anyValueIsNullable:Bool = true) -> JSONDictionary? {
         let jsonObject: AnyObject? = NSJSONSerialization.JSONObjectWithData(json, options: nil, error: nil)
         if let js = jsonObject as? Dictionary<String,AnyObject> {
-            return JSONDictionary(dict: js)
+            return JSONDictionary(dict: js, restrictTypeChanges: restrictTypeChanges, anyValueIsNullable: anyValueIsNullable)
         }
         else {
             return nil
         }
     }
-    public static func parseArray(json:NSData) -> JSONArray? {
+    public static func parseArray(json:NSData, restrictTypeChanges:Bool = true, anyValueIsNullable:Bool = true) -> JSONArray? {
         let jsonObject: AnyObject? = NSJSONSerialization.JSONObjectWithData(json, options: nil, error: nil)
         if let js = jsonObject as? [AnyObject] {
-            return JSONArray(array: js)
+            return JSONArray(array: js, restrictTypeChanges: restrictTypeChanges, anyValueIsNullable: anyValueIsNullable)
         }
         else {
             return nil
