@@ -101,17 +101,17 @@ class XMLParser:NSObject, NSXMLParserDelegate {
             return strA
             
         }
+    
         static func json2xml(json:JSONDictionary)->String? {
             
-            let str1 = json2xmlUnchecked(json)
-            let str = str1.stringByReplacingOccurrencesOfString("&", withString: "&amp;", options: nil, range: Range(start: str1.startIndex, end: str1.endIndex))
+            let str = json2xmlUnchecked(json)
             
             if let d = str.dataUsingEncoding(NSUTF8StringEncoding) {
-                println("parsing1")
+
                 let xml = NSXMLParser(data: d)
                 if xml.parse() == true {
                     
-                    println("parsing")
+
                     return str
                 }
                 else {return nil }
