@@ -86,9 +86,74 @@ class XMLParser:NSObject, NSXMLParserDelegate {
     }
     
     func parserDidEndDocument(parser: NSXMLParser) {
-       if let doc = elementArray.last { document = doc }
+        if let doc = elementArray.last { document = doc }
       
-    
     }
     
+
+        
+        private static func xmlEntities(str:String) -> String {
+            let xmlEntities = ["\"":"&quot;","&":"&amp;","'":"&apos;","<":"lt",">":"&gt;"]
+            var strA = ""
+            for (k,v) in xmlEntities {
+                strA = str.stringByReplacingOccurrencesOfString(k, withString: v, options: nil, range: Range(start: str.startIndex, end: str.endIndex))
+            }
+            return strA
+            
+        }
+        static func json2xml(json:JSONDictionary)->String? {
+            
+            let str1 = json2xmlUnchecked(json)
+            let str = str1.stringByReplacingOccurrencesOfString("&", withString: "&amp;", options: nil, range: Range(start: str1.startIndex, end: str1.endIndex))
+            
+            if let d = str.dataUsingEncoding(NSUTF8StringEncoding) {
+                println("parsing1")
+                let xml = NSXMLParser(data: d)
+                if xml.parse() == true {
+                    
+                    println("parsing")
+                    return str
+                }
+                else {return nil }
+            }
+            else {return nil }
+        }
+        private static func json2xmlUnchecked(json:JSONDictionary) -> String {
+            
+            // TODO: bit of a fudge to allow the method to take a JSONDictionary, think about using protocol or reworking the method, OK for now - it works!
+            let jArray = JSONArray(array:[json.dictionary])
+            return json2xmlUnchecked(jArray)
+        }
+        private static func json2xmlUnchecked(json:JSONArray) -> String {
+            
+            
+            var bodyHTML = ""
+            for b in json {
+                // if it's a string we simply add the string to the bodyHTML string
+                if let str = b.str {
+                    
+                    bodyHTML += xmlEntities(str)
+                    // This bit works
+                    
+                }
+                    
+                    // if it's a dictionary we know it has a tag key
+                else if let dict = b.jsonDict
+                {
+                    bodyHTML += extractFromDictionaryXml2json(dict)
+                    
+                }
+                    
+                    // it shouldn't be an array, and this can most likely be removed
+                else if let arr = b.jsonArr
+                {
+                    bodyHTML += json2xmlUnchecked(arr)
+                    
+                }
+            }
+            
+            return bodyHTML
+        }
+    
 }
+
