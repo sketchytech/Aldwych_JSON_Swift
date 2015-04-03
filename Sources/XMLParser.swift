@@ -154,6 +154,49 @@ class XMLParser:NSObject, NSXMLParserDelegate {
             
             return bodyHTML
         }
+    static func extractFromDictionaryXml2json(dict:JSONDictionary) -> String {
+        var elementHTML = ""
+        for (k,v) in dict {
+            // if it matches one in the list of tags in the body template work through that element's array to build the relevant HTML
+            if k != "attributes" {
+                elementHTML += "<"
+                elementHTML += k
+                if let atts = dict["attributes"]?.jsonDict {
+                    for (k,v) in atts {
+                        elementHTML += " "
+                        elementHTML += k
+                        elementHTML += "=\""
+                        if let s = v?.str {
+                            elementHTML += s
+                            
+                        }
+                        elementHTML += "\""
+                    }
+                    
+                    elementHTML += ">"
+                }
+                if let text = v?.str {
+                    elementHTML += xmlEntities(text)
+                    
+                }
+                if let text = v?.jsonArr {
+                    elementHTML += json2xmlUnchecked(text)
+                    
+                }
+                
+                elementHTML += "</"
+                elementHTML += k
+                elementHTML += ">"
+            }
+                
+            else if let json = dict[k]?.jsonArr {
+                // cycle back through
+                elementHTML += json2xmlUnchecked(json)
+            }
+            
+        }
+        return elementHTML
+    }
     
 }
 
