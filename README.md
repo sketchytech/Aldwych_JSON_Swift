@@ -14,7 +14,7 @@ Going back the other way:
 ```
 if let json = JSONParser.parseDictionary(data),
    str = XMLParser.json2xml(json) {
-    // if the json was of a type that could be converted to XML, i.e. it follows the same structure as XML output by the parse() method of XMLParser, then a valid XML string will be return, else nil will be returned
+    // if the json was of a type that could be converted to XML, i.e. it follows the same structure as XML output by the parse() method of XMLParser, then a valid XML string will be returned, else nil will be returned
    }
 ```
 Read more about [XML to JSON parsing in Aldwych](http://sketchytech.blogspot.com).
