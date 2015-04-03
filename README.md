@@ -1,6 +1,6 @@
 # Aldwych (formerly iolcos)
 JSON parser/creator for Swift &ndash; for parsing, editing, creating and reconstituting of parsed data.
-## Just added: XML to JSON to XML Parsing
+## Just added: XML to JSON Parsing
 ```
 var error:NSError?
 if let url = NSBundle.mainBundle().pathForResource("test", ofType: "xml"),
@@ -10,6 +10,7 @@ if let url = NSBundle.mainBundle().pathForResource("test", ofType: "xml"),
         let jsonData = a.parse(d).jsonData(options: nil, error: &error)
    }
 ```
+## Just added: JSON to XML Parsing
 Going back the other way:
 ```
 if let json = JSONParser.parseDictionary(data),
