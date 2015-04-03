@@ -18,6 +18,7 @@ class XMLParser:NSObject, NSXMLParserDelegate {
     
     func parse(xml:NSData) -> JSONDictionary {
         var xml2json = NSXMLParser(data: xml)
+        // xml2json.shouldProcessNamespaces = true
         xml2json.delegate = self
         xml2json.parse()
         return document
@@ -28,7 +29,6 @@ class XMLParser:NSObject, NSXMLParserDelegate {
     }
     
     func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [NSObject : AnyObject]) {
-
        
         // current dictionary is the newly opened tag
         elementArray.append(JSONDictionary(dict: [elementName:"", "attributes":attributeDict], restrictTypeChanges: false))
