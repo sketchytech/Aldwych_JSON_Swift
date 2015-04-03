@@ -1,4 +1,4 @@
-# Aldwych (formerly iolcos)
+# Aldwych
 JSON parser/creator for Swift &ndash; for parsing, editing, creating and reconstituting of parsed data.
 ## XML to JSON Parsing
 ```
