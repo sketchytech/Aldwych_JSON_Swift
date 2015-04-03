@@ -94,9 +94,9 @@ class XMLParser:NSObject, NSXMLParserDelegate {
         
         private static func xmlEntities(str:String) -> String {
             let xmlEntities = ["\"":"&quot;","&":"&amp;","'":"&apos;","<":"lt",">":"&gt;"]
-            var strA = ""
+            var strA = str
             for (k,v) in xmlEntities {
-                strA = str.stringByReplacingOccurrencesOfString(k, withString: v, options: nil, range: Range(start: str.startIndex, end: str.endIndex))
+                strA = strA.stringByReplacingOccurrencesOfString(k, withString: v, options: nil, range: Range(start: strA.startIndex, end: strA.endIndex))
             }
             return strA
             
