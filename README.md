@@ -9,6 +9,7 @@ The `replaceStringUsingRegularExpressionInJSONDictionary()` and `replaceStringUs
         replaceStringUsingRegularExpressionInJSONDictionary("paper|chair", &dict, withString: "pineapple")
         println(dict.stringify(options: nil, error: &myError)) // {"b":"while sitting on a pineapple","a":["I was reading the pineapple"]}
 ```
+Note: key values are not changed by RegEx using this function.
 ### Further Early Replace Functions
 A series of replace functions have been added for strings, dictionaries and arrays. These are designed to work with parsed XML (see below). They work through the entire supplied dictionary and search all values that are arrays for nested dictionarys.
 ```
