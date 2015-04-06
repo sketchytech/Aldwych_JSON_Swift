@@ -1,6 +1,20 @@
 # Aldwych
 JSON parser/creator for Swift &ndash; for parsing, editing, creating and reconstituting of parsed data.
-## XML to JSON Parsing
+## Just added: Early Search and Replace Functions
+A series of replace functions have been added for strings, dictionaries and arrays. These are designed to work with parsed XML (see below). They work through the entire supplied dictionary and search all values that are arrays for nested dictionarys.
+```
+if let d = jsonData,
+          j = JSONParser.parseDictionary(d)
+           {
+            var json = j
+            replaceValue("li", &json, string:"List item replaced")
+            println(json.dictionary)
+            }
+
+```
+Where the value is nested inside a dictionary that is the value of a parent dictionary it currently fails (it must currently be an array of dictionaries for the search to proceed). As the heading states this is early functionality, it works well in the case specified but expansion and refinement will follow.
+## Recently added
+### XML to JSON Parsing
 ```
 var error:NSError?
 if let url = NSBundle.mainBundle().pathForResource("test", ofType: "xml"),
@@ -10,7 +24,7 @@ if let url = NSBundle.mainBundle().pathForResource("test", ofType: "xml"),
         let jsonData = a.parse(d).jsonData(options: nil, error: &error)
    }
 ```
-## Just added: JSON to XML Parsing
+###JSON to XML Parsing
 Going back the other way:
 ```
 if let json = JSONParser.parseDictionary(data),
