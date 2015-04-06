@@ -1,6 +1,15 @@
 # Aldwych
 JSON parser/creator for Swift &ndash; for parsing, editing, creating and reconstituting of parsed data.
-## Just added: Early Replace Functions
+## Just added
+### Regular Expressions (GREP) for String Values
+The `replaceStringUsingRegularExpressionInJSONDictionary()` and `replaceStringUsingRegularExpressionInJSONArray()` functions make RegEx changes to all strings in the JSONArray or JSONDictionary (including any nested strings). For example:
+```
+        var myError:NSError?
+        var dict = JSONDictionary(dict: ["a":["I was reading the paper"],"b":"while sitting on a chair"])
+        replaceStringUsingRegularExpressionInJSONDictionary("paper|chair", &dict, withString: "pineapple")
+        println(dict.stringify(options: nil, error: &myError)) // {"b":"while sitting on a pineapple","a":["I was reading the pineapple"]}
+```
+### Further Early Replace Functions
 A series of replace functions have been added for strings, dictionaries and arrays. These are designed to work with parsed XML (see below). They work through the entire supplied dictionary and search all values that are arrays for nested dictionarys.
 ```
 if let d = jsonData,
