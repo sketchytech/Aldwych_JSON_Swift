@@ -1,6 +1,6 @@
 # Aldwych
 JSON parser/creator for Swift &ndash; for parsing, editing, creating and reconstituting of parsed data.
-## Just added: Early Search and Replace Functions
+## Just added: Early Replace Functions
 A series of replace functions have been added for strings, dictionaries and arrays. These are designed to work with parsed XML (see below). They work through the entire supplied dictionary and search all values that are arrays for nested dictionarys.
 ```
 if let d = jsonData,
