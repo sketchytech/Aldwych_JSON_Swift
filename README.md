@@ -12,7 +12,9 @@ if let d = jsonData,
             }
 
 ```
-Where the value is nested inside a dictionary that is the value of a parent dictionary it currently fails (it must currently be an array of dictionaries for the search to proceed). As the heading states this is early functionality, it works well in the case specified but expansion and refinement will follow.
+Where the value is nested inside a dictionary that is the value of a parent dictionary it currently fails (it must currently be an array of dictionaries for the search to proceed). As the heading states this is early functionality, it works well in a scenario like the following: XML has been parsed by Aldwych which contains list items `<li>`. It doesn't matter how deeply nested within `<div>`s and so on, all values with be replaced.
+
+Further refinement and improvement will be added for more general cases.
 ## Recently added
 ### XML to JSON Parsing
 ```
