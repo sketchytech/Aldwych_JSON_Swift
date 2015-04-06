@@ -8,6 +8,56 @@
 
 import Foundation
 
+
+
+func replaceStringUsingRegularExpressionInJSONArray(expression exp:String, inout arr:JSONArray, withString string: String) {
+    
+    // make sure we can make type changes everywhere
+    arr.restrictTypeChanges = false
+    arr.inheritRestrictions = true
+    
+    for a in enumerate(arr) {
+        if let array = a.element.jsonArr {
+            replaceStringUsingRegularExpressionInJSONArray(expression: exp, &arr[a.index]!, withString:string)
+        }
+        else if let str = a.element.str {
+            var s = str
+            s.replaceStringsUsingRegularExpression(expression: exp, withString:string, error: nil)
+            arr[a.index] = s
+        }
+        else if let dic = a.element.jsonDict {
+            replaceStringUsingRegularExpressionInJSONDictionary(exp, &arr[a.index]!, withString: string)
+        }
+        
+    }
+}
+func replaceStringUsingRegularExpressionInJSONDictionary(exp:String, inout dict:JSONDictionary, withString string:String) {
+    
+    // make sure we can make type changes everywhere
+    dict.restrictTypeChanges = false
+    dict.inheritRestrictions = true
+    
+    for (k,v) in dict {
+        if let st = v?.str {
+            var s = st
+            s.replaceStringsUsingRegularExpression(expression: exp, withString: string, error: nil)
+            dict[k] = s
+        }
+        
+        else if let dic = v?.jsonDict {
+
+        replaceStringUsingRegularExpressionInJSONDictionary(exp, &dict[k]!, withString: string)
+        }
+        else if let arr = v?.jsonArr {
+                    replaceStringUsingRegularExpressionInJSONArray(expression: exp, &dict[k]!, withString:string)
+
+        }
+
+
+    }
+}
+
+
 func replaceValue(key:String, inout dict:JSONDictionary, array arra:JSONArray) {
     
     // make sure we can make type changes everywhere
