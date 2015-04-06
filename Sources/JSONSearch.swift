@@ -10,6 +10,59 @@ import Foundation
 
 
 
+func replaceStringWithStringInJSONArray(string:String, inout arr:JSONArray, withString: String, options opt:NSMatchingOptions = nil) {
+    
+    // make sure we can make type changes everywhere
+    arr.restrictTypeChanges = false
+    arr.inheritRestrictions = true
+    
+    for a in enumerate(arr) {
+        if let array = a.element.jsonArr {
+        
+            replaceStringUsingRegularExpressionInJSONArray(expression: string, &arr[a.index]!, withString:withString)
+        }
+        else if let str = a.element.str {
+            var s = str
+            s.stringByReplacingOccurrencesOfString(str, withString: withString, options: nil, range: nil)
+  
+            arr[a.index] = s
+        }
+        else if let dic = a.element.jsonDict {
+            replaceStringUsingRegularExpressionInJSONDictionary(string, &arr[a.index]!, withString: withString,options:opt)
+        }
+        
+    }
+}
+func replaceStringWithStringInJSONDictionary(string:String, inout dict:JSONDictionary, withString:String, options opt:NSMatchingOptions = nil) {
+    
+    // make sure we can make type changes everywhere
+    dict.restrictTypeChanges = false
+    dict.inheritRestrictions = true
+    
+    for (k,v) in dict {
+        if let st = v?.str {
+            var s = st
+            s.replaceStringsUsingRegularExpression(expression: string, withString: withString, options:opt, error: nil)
+            dict[k] = s
+        }
+            
+        else if let dic = v?.jsonDict {
+            
+            replaceStringUsingRegularExpressionInJSONDictionary(string, &dict[k]!, withString: withString)
+        }
+        else if let arr = v?.jsonArr {
+            replaceStringUsingRegularExpressionInJSONArray(expression: string, &dict[k]!, withString:withString, options:opt)
+            
+        }
+        
+        
+    }
+    
+    
+    
+    
+}
+
 func replaceStringUsingRegularExpressionInJSONArray(expression exp:String, inout arr:JSONArray, withString string: String) {
     
     // make sure we can make type changes everywhere
