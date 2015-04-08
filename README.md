@@ -227,6 +227,7 @@ At present insert and append methods do not restrict type at all. It will be con
 * Markdown parsing to JSON (exportable to XML)
 * [DOCX](http://blogs.msdn.com/b/chrisrae/archive/2010/09/25/where-is-the-documentation-for-office-2010-s-docx-xlsx-pptx-formats.aspx) to JSON (exportable to XML)
 * XML to EPUB &ndash; as part of the [json-book](https://github.com/sketchytech/json-book)
+* translation to and from NSAttributedString for display of text
 
 #Contact
 You can get in touch on twitter [@sketchyTech](http://twitter.com/sketchyTech).
