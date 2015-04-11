@@ -1,52 +1,6 @@
 # Aldwych
 JSON parser/creator for Swift &ndash; for parsing, editing, creating and reconstituting of parsed data.
-## Just added
-### Regular Expressions (GREP) for String Values
-The `replaceStringUsingRegularExpressionInJSONDictionary()` and `replaceStringUsingRegularExpressionInJSONArray()` functions make RegEx changes to all strings in the JSONArray or JSONDictionary (including any nested strings). For example:
-```
-        var myError:NSError?
-        var dict = JSONDictionary(dict: ["a":["I was reading the paper"],"b":"while sitting on a chair"])
-        replaceStringUsingRegularExpressionInJSONDictionary("paper|chair", &dict, withString: "pineapple")
-        println(dict.stringify(options: nil, error: &myError)) // {"b":"while sitting on a pineapple","a":["I was reading the pineapple"]}
-```
-Note: key values are not changed by RegEx using this function.
-### Further Early Replace Functions
-A series of replace functions have been added for strings, dictionaries and arrays. These are designed to work with parsed XML (see below). They work through the entire supplied dictionary and search all values that are arrays for nested dictionarys.
-```
-if let d = jsonData,
-          j = JSONParser.parseDictionary(d)
-           {
-            var json = j
-            replaceValue("li", &json, string:"List item replaced")
-            println(json.dictionary)
-            }
 
-```
-Where the value is nested inside a dictionary that is the value of a parent dictionary it currently fails (it must currently be an array of dictionaries for the search to proceed). As the heading states this is early functionality, it works well in a scenario like the following: XML has been parsed by Aldwych which contains list items `<li>`. It doesn't matter how deeply nested within `<div>`s and so on, all values with be replaced with the specified string, array, dictionary, number, etc. (Note: There's also a replaceValueWithNull() function.)
-
-Further refinement and improvement will be added for more general cases.
-## Recently added
-### XML to JSON Parsing
-```
-var error:NSError?
-if let url = NSBundle.mainBundle().pathForResource("test", ofType: "xml"),
-   d = NSData(contentsOfFile: url)
-   {
-        let a = XMLParser()
-        let jsonData = a.parse(d).jsonData(options: nil, error: &error)
-   }
-```
-###JSON to XML Parsing
-Going back the other way:
-```
-if let json = JSONParser.parseDictionary(data),
-   str = XMLParser.json2xml(json) {
-    // if the json was of a type that could be converted to XML, i.e. it follows the same structure as XML output by the parse() method of XMLParser, then a valid XML string will be returned, else nil will be returned
-   }
-```
-Read more about [XML to JSON parsing in Aldwych](http://sketchytech.blogspot.com).
-
-Also added a stringify() method to JSONArray and JSONDictionary.
 #Guiding Principles
 The guiding principles of the parser are:
 
@@ -219,6 +173,54 @@ For more refined handling of data, additional types can be created. If you add t
         iT.outputJSON()?.writeToFile("/tmp/b12.json", atomically: false)
     }
 It's an example of how the data can be filtered but still renconstituted. Note: an explanation of the logic and also suitable patterns for building new types for other APIs is planned. 
+
+## Just added
+### Regular Expressions (GREP) for String Values
+The `replaceStringUsingRegularExpressionInJSONDictionary()` and `replaceStringUsingRegularExpressionInJSONArray()` functions make RegEx changes to all strings in the JSONArray or JSONDictionary (including any nested strings). For example:
+```
+        var myError:NSError?
+        var dict = JSONDictionary(dict: ["a":["I was reading the paper"],"b":"while sitting on a chair"])
+        replaceStringUsingRegularExpressionInJSONDictionary("paper|chair", &dict, withString: "pineapple")
+        println(dict.stringify(options: nil, error: &myError)) // {"b":"while sitting on a pineapple","a":["I was reading the pineapple"]}
+```
+Note: key values are not changed by RegEx using this function.
+### Further Early Replace Functions
+A series of replace functions have been added for strings, dictionaries and arrays. These are designed to work with parsed XML (see below). They work through the entire supplied dictionary and search all values that are arrays for nested dictionarys.
+```
+if let d = jsonData,
+          j = JSONParser.parseDictionary(d)
+           {
+            var json = j
+            replaceValue("li", &json, string:"List item replaced")
+            println(json.dictionary)
+            }
+
+```
+Where the value is nested inside a dictionary that is the value of a parent dictionary it currently fails (it must currently be an array of dictionaries for the search to proceed). As the heading states this is early functionality, it works well in a scenario like the following: XML has been parsed by Aldwych which contains list items `<li>`. It doesn't matter how deeply nested within `<div>`s and so on, all values with be replaced with the specified string, array, dictionary, number, etc. (Note: There's also a replaceValueWithNull() function.)
+
+Further refinement and improvement will be added for more general cases.
+## Recently added
+### XML to JSON Parsing
+```
+var error:NSError?
+if let url = NSBundle.mainBundle().pathForResource("test", ofType: "xml"),
+   d = NSData(contentsOfFile: url)
+   {
+        let a = XMLParser()
+        let jsonData = a.parse(d).jsonData(options: nil, error: &error)
+   }
+```
+###JSON to XML Parsing
+Going back the other way:
+```
+if let json = JSONParser.parseDictionary(data),
+   str = XMLParser.json2xml(json) {
+    // if the json was of a type that could be converted to XML, i.e. it follows the same structure as XML output by the parse() method of XMLParser, then a valid XML string will be returned, else nil will be returned
+   }
+```
+Read more about [XML to JSON parsing in Aldwych](http://sketchytech.blogspot.com).
+
+Also added a stringify() method to JSONArray and JSONDictionary.
 #Future Functionality
 The aim is to enable the JSONDictionary and JSONArray types to mirror the functionality of Dictionary and Array and to have them adhere to the same protocols. Some of this is already in place and the exact methods and properties that are accessible will be listed here soon.
 
