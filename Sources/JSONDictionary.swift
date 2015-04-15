@@ -88,7 +88,7 @@ public struct JSONDictionary:SequenceType {
                 if nullDict == nil {
                     nullDict = Dictionary<String,NSNull>()
                 }
-                if numDict != nil {
+                if nullDict != nil {
                     nullDict![k] = v
                 }
             }
