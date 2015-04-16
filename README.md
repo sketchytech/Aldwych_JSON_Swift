@@ -1,6 +1,7 @@
 # Aldwych
 JSON parser/creator for Swift &ndash; for parsing, editing, creating and reconstituting of parsed data.
 
+
 #Guiding Principles
 The guiding principles of the parser are:
 
@@ -12,6 +13,13 @@ The guiding principles of the parser are:
 * JSON can not only be parsed but also created from scratch in a type safe manner
 * structure of JSON can be further refined through adding API specific types. This can reduce the size of manipulated data for use in UITableView, etc., while still making it possible to edit and reconstitute.
 
+## Supporters
+![Grumpy Goat Interactive][logo]
+
+[Grumpy Goat Interactive](http://www.grumpygoat.ca)
+[logo]: http://www.gylphi.co.uk/index_new/aldwych/supporter_logos/grumpygoat_400.png  "Grumpy Goat Interactive"
+## Endorsements
+"Aldwych played a pivotal role in deploying an update to my client's app. Being able to manipulate the JSON object was a huge time saver, and made the typical cumbersome approach a very pleasant experience." [Mat Cartmill](http://twitter.com/MatCartmill), **Grumpy Goat Interactive**
 #Naming
 This repository ~~follows the logic of many other JSON repositories in that the name is derived from some connection to Jason, the Greek mythological hero. Iolcos was Jason's starting point in the myth of the Golden Fleece, and this JSON parser is a new starting point for the parsing of JSON in Swift.~~ is randomly named after a London street. Really it makes no sense, because Aldwych is a one-way street and this parser is the opposite. It's all about working in two directions, but hey it sounded punchier than iolcos. (Note: a part of me wanted to call it Vodka &ndash; SwiftSummit 2015.) 
 #Capabilities and Requirements
