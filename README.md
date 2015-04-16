@@ -21,8 +21,8 @@ The guiding principles of the parser are:
 ![Gylphi Limited][logo2]
 
 [Gylphi Limited](http://www.gylphi.co.uk)
-[logo]: http://www.gylphi.co.uk/index_new/aldwych/supporter_logos/grumpygoat_400_crop.png  "Grumpy Goat Interactive"
-[logo2]: http://www.gylphi.co.uk/index_new/aldwych/supporter_logos/gylphi_logo_twitter.jpg  "Gylphi Limited"
+[logo]: https://github.com/sketchytech/Aldwych_JSON_Swift/blob/master/readme_images/grumpygoat_400.png  "Grumpy Goat Interactive"
+[logo2]: https://github.com/sketchytech/Aldwych_JSON_Swift/blob/master/readme_images/gylphi_logo_twitter.jpg  "Gylphi Limited"
 ## Endorsements
 "Aldwych played a pivotal role in deploying an update to my client's app. Being able to manipulate the JSON object was a huge time saver, and made the typical cumbersome approach a very pleasant experience." [Mat Cartmill](http://twitter.com/MatCartmill), **Grumpy Goat Interactive**
 #Naming
