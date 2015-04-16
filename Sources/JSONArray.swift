@@ -102,7 +102,6 @@ public struct JSONArray:SequenceType {
         }
         
     }
-    
     public var array:[AnyObject] {
         
         var arr = [AnyObject](count: self.count, repeatedValue: [AnyObject]())
@@ -122,6 +121,8 @@ public struct JSONArray:SequenceType {
             }
         }
         
+        
+        
         if dictDict != nil {
             for (k,v) in dictDict! {
                 arr[k] = v.dictionary
@@ -130,6 +131,40 @@ public struct JSONArray:SequenceType {
         if arrayDict != nil {
             for (k,v) in arrayDict! {
                 arr[k] = v.array
+            }
+        }
+        return arr
+    }
+    
+
+    
+    public var nsArray:NSArray {
+        
+        var arr = NSMutableArray(capacity: self.count)
+        if stringDict != nil {
+            for (k,v) in stringDict! {
+                arr[k] = v as NSString
+            }
+        }
+        if numDict != nil {
+            for (k,v) in numDict! {
+                arr[k] = v as NSNumber
+            }
+        }
+        if nullDict != nil {
+            for (k,v) in nullDict! {
+                arr[k] = v as NSNull
+            }
+        }
+        
+        if dictDict != nil {
+            for (k,v) in dictDict! {
+                arr[k] = v.nsDictionary as NSDictionary
+            }
+        }
+        if arrayDict != nil {
+            for (k,v) in arrayDict! {
+                arr[k] = v.nsArray as NSArray
             }
         }
         return arr

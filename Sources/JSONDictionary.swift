@@ -23,7 +23,6 @@ public struct JSONDictionary:SequenceType {
     
     private var dictDict:Dictionary<String,JSONDictionary>?
     private var arrayDict:Dictionary<String,JSONArray>?
-    
     public var dictionary:Dictionary<String,NSObject> {
         var dictionary = Dictionary<String,NSObject>()
         
@@ -33,7 +32,7 @@ public struct JSONDictionary:SequenceType {
                 dictionary[k] = v as NSObject
             }
         }
-        if let nD = numDict {
+               if let nD = numDict {
             for (k,v) in nD {
                 dictionary[k] = v as NSObject
             }
@@ -43,6 +42,8 @@ public struct JSONDictionary:SequenceType {
                 dictionary[k] = v as NSObject
             }
         }
+        
+        
         if let dD = dictDict {
             for (k,v) in dD {
                 dictionary[k] = v.dictionary as NSObject
@@ -56,6 +57,39 @@ public struct JSONDictionary:SequenceType {
         }
         return dictionary
     }
+    public var nsDictionary:NSDictionary {
+        var dictionary = NSMutableDictionary()
+        
+        
+        if let sD = stringDict  {
+            for (k,v) in sD {
+                dictionary[k] = v as NSString
+            }
+        }
+        if let nD = numDict {
+            for (k,v) in nD {
+                dictionary[k] = v as NSNumber
+            }
+        }
+        if let nuD = nullDict {
+            for (k,v) in nuD {
+                dictionary[k] = v as NSNull
+            }
+        }
+        if let dD = dictDict {
+            for (k,v) in dD {
+                dictionary[k] = v.nsDictionary as NSDictionary
+                
+            }
+        }
+        if let aD = arrayDict {
+            for (k,v) in aD {
+                dictionary[k] = v.nsArray as NSArray
+            }
+        }
+        return dictionary
+    }
+    
     
     public init (restrictTypeChanges:Bool = true, anyValueIsNullable:Bool = true) {
         self.anyValueIsNullable = anyValueIsNullable
@@ -400,10 +434,10 @@ extension JSONDictionary {
             }
                 
             else if let a = dictDict?[key] {
-                return Value.JSONDictionaryType(a)
+                return Value(a)
             }
             else if let a = arrayDict?[key] {
-                return Value.JSONArrayType(a)
+                return Value(a)
             }
             
             
@@ -575,13 +609,17 @@ public struct JSONDictionaryGenerator:GeneratorType {
     mutating public func next() -> (String,Value?)? {
         if i < keys.count {
             let key = keys[i]
+            // crashing here when doing regEx search and replace strings
             if let v:Value? = dict[key] {
                 ++i
                 return (key, v)
+            }
+            else {
+                return nil
             }
         }
         // reset value
         i = 0
         return nil
     }
-}
+	}
