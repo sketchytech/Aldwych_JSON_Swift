@@ -11,6 +11,7 @@ import Foundation
 public enum Value {
     case StringType(String)
     case NumberType(NSNumber)
+    
     case NullType(NSNull)
     
     // json object types
@@ -22,11 +23,20 @@ public enum Value {
 // initialization of Value instances
 extension Value {
     
-    public init? (_ val:AnyObject) {
+    public init (_ val:JSONArray, restrictTypeChanges:Bool = true, anyValueIsNullable: Bool = true) {
+        self = .JSONArrayType(val)
+    }
+    
+    public init (_ val:JSONDictionary, restrictTypeChanges:Bool = true, anyValueIsNullable: Bool = true) {
+        self = .JSONDictionaryType(val)
+    }
+    
+    
+    
+    public init? (_ val:AnyObject, restrictTypeChanges:Bool = true, anyValueIsNullable: Bool = true) {
         if let v = val as? String {
             self = .StringType(v)
         }
-            
         else if let v = val as? NSNumber {
             self = .NumberType(v)
         }
@@ -35,11 +45,12 @@ extension Value {
             self = .NullType(v)
         }
             
+            
         else if let v = val as? Dictionary<String,AnyObject> {
-            self = Value.JSONDictionaryType(JSONDictionary(dict: v))
+            self = Value.JSONDictionaryType(JSONDictionary(dict: v, restrictTypeChanges: restrictTypeChanges, anyValueIsNullable: anyValueIsNullable))
         }
         else if let v = val as? [AnyObject] {
-            self = Value.JSONArrayType(JSONArray(array: v))
+            self = Value.JSONArrayType(JSONArray(array: v, restrictTypeChanges: restrictTypeChanges, anyValueIsNullable: anyValueIsNullable))
         }
         else {
             return nil
@@ -73,6 +84,8 @@ extension Value {
         }
         
     }
+    
+  
     public var num:NSNumber? {
         switch self {
         case .NumberType(let num):
@@ -96,8 +109,8 @@ extension Value {
     }
     public var null:NSNull? {
         switch self {
-        case .NullType(let null):
-            return null
+        case .NullType(let nullType):
+            return nullType
         default:
             return nil
         }
