@@ -25,6 +25,8 @@ The guiding principles of the parser are:
 [logo2]: https://github.com/sketchytech/Aldwych_JSON_Swift/blob/master/readme_images/gylphi_logo_twitter.jpg  "Gylphi Limited"
 ## Endorsements
 "Aldwych played a pivotal role in deploying an update to my client's app. Being able to manipulate the JSON object was a huge time saver, and made the typical cumbersome approach a very pleasant experience." [Mat Cartmill](http://twitter.com/MatCartmill), **Grumpy Goat Interactive**
+
+*If you've used Aldwych in an app then it would be great to feature your experience on this page and a link to your app. Contact: [@sketchyTech](http://twitter.com/sketchyTech).*
 #Naming
 This repository ~~follows the logic of many other JSON repositories in that the name is derived from some connection to Jason, the Greek mythological hero. Iolcos was Jason's starting point in the myth of the Golden Fleece, and this JSON parser is a new starting point for the parsing of JSON in Swift.~~ is randomly named after a London street. Really it makes no sense, because Aldwych is a one-way street and this parser is the opposite. It's all about working in two directions, but hey it sounded punchier than iolcos. (Note: a part of me wanted to call it Vodka &ndash; SwiftSummit 2015 attendees will understand this one.) 
 #Capabilities and Requirements
