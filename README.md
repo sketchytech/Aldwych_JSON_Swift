@@ -155,6 +155,25 @@ and
         }
 
 
+#Bool handling (recently added)
+
+```
+if let fileURL = NSBundle.mainBundle().URLForResource("my", withExtension: "json"),
+            data = NSData(contentsOfURL: fileURL),
+            json = JSONParser.parseDictionary(data, handleBoolValues: true) {
+                
+                if let b = json["this"]?.bool {
+                    println(b)
+                }
+                
+                if let n = json["that"]?.num {
+                    println(n)
+                }
+                println(json.keysWithBoolValues)
+                println(json.stringify(options: nil, error: nil))
+                
+        }
+```
 #Round-tripping data
 To round-trip the JSON simply write
 
