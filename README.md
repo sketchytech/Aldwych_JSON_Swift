@@ -177,7 +177,7 @@ if let fileURL = NSBundle.mainBundle().URLForResource("my", withExtension: "json
 #Round-tripping data
 To round-trip the JSON simply write
 
-`myJSON.jsonData(options:NSJSONWritingOptions = nil, error:NSErrorPointer = nil) -> NSData?`
+`myJSON.jsonData() -> NSData?`
 
 it works for JSONDictionary and JSONArray
 
