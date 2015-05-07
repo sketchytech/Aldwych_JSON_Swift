@@ -260,7 +260,7 @@ The aim is to enable the JSONDictionary and JSONArray types to mirror the functi
 
 At present insert and append methods do not restrict type at all. It will be considered how type safety might be applied here so as to restrict the corruption of JSON structure and data. However, if this is a concern then it may well be the place of refined handling types to ensure illegal changes are not made to data.
 ## In preparation
-* Two-way bool handling (currently bool values are imported and accessed as numbers: 1 and 0)
+* ~~Two-way bool handling (currently bool values are imported and accessed as numbers: 1 and 0)~~ added 7 May 2015
 * Markdown parsing to JSON (exportable to XML)
 * [DOCX](http://blogs.msdn.com/b/chrisrae/archive/2010/09/25/where-is-the-documentation-for-office-2010-s-docx-xlsx-pptx-formats.aspx) to JSON (exportable to XML)
 * XML to EPUB &ndash; as part of the [json-book](https://github.com/sketchytech/json-book)
