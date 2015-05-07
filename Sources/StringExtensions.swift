@@ -21,4 +21,24 @@ extension String {
             self = st
         }
     }
+    
+    
+    public func getMatches(regex: String, options: NSStringCompareOptions?) -> [Range<String.Index>] {
+            var arr = [Range<String.Index>]()
+            var rang = Range(start: self.startIndex, end: self.endIndex)
+            var foundRange:Range<String.Index>?
+            
+            do
+            {
+                foundRange = self.rangeOfString(regex, options: options ?? nil, range: rang, locale: nil)
+                
+                if let a = foundRange {
+                    arr.append(a)
+                    rang.startIndex = foundRange!.endIndex
+                }
+            }
+                while foundRange != nil
+            return  arr
+        }
+    
 }

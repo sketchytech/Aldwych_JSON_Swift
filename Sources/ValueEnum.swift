@@ -11,6 +11,7 @@ import Foundation
 public enum Value {
     case StringType(String)
     case NumberType(NSNumber)
+    case BoolType(Bool)
     
     case NullType(NSNull)
     
@@ -23,6 +24,19 @@ public enum Value {
 // initialization of Value instances
 extension Value {
     
+    public init (num:NSNumber, restrictTypeChanges:Bool = true, anyValueIsNullable: Bool = true) {
+        self = .NumberType(num)
+    }
+    
+    public init (_ val:String, restrictTypeChanges:Bool = true, anyValueIsNullable: Bool = true) {
+        self = .StringType(val)
+    }
+    public init (_ val:NSNull, restrictTypeChanges:Bool = true, anyValueIsNullable: Bool = true) {
+        self = .NullType(val)
+    }
+    public init (bool:Bool, restrictTypeChanges:Bool = true, anyValueIsNullable: Bool = true) {
+        self = .BoolType(bool)
+    }
     public init (_ val:JSONArray, restrictTypeChanges:Bool = true, anyValueIsNullable: Bool = true) {
         self = .JSONArrayType(val)
     }
@@ -32,7 +46,7 @@ extension Value {
     }
     
     
-    
+    /*
     public init? (_ val:AnyObject, restrictTypeChanges:Bool = true, anyValueIsNullable: Bool = true) {
         if let v = val as? String {
             self = .StringType(v)
@@ -45,7 +59,6 @@ extension Value {
             self = .NullType(v)
         }
             
-            
         else if let v = val as? Dictionary<String,AnyObject> {
             self = Value.JSONDictionaryType(JSONDictionary(dict: v, restrictTypeChanges: restrictTypeChanges, anyValueIsNullable: anyValueIsNullable))
         }
@@ -55,7 +68,7 @@ extension Value {
         else {
             return nil
         }
-    }
+    }*/
     
     
 }
@@ -71,7 +84,6 @@ extension Value {
         }
         
     }
-    
     public var strOpt:String?? {
         switch self {
         case .StringType(let str):
@@ -101,6 +113,28 @@ extension Value {
             return num
         case .NullType(let null):
             let a:NSNumber? = nil
+            return a
+        default:
+            return nil
+        }
+        
+    }
+    
+    public var bool:Bool? {
+        switch self {
+        case .BoolType(let bool):
+            return bool
+        default:
+            return nil
+        }
+        
+    }
+    public var boolOpt:Bool?? {
+        switch self {
+        case .BoolType(let bool):
+            return bool
+        case .NullType(let null):
+            let a:Bool? = nil
             return a
         default:
             return nil

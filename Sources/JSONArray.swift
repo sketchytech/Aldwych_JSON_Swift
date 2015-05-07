@@ -16,6 +16,7 @@ public struct JSONArray:SequenceType {
     // use dictionary with index as keys for position in array
     private var stringDict:Dictionary<Int,String>?
     private var numDict:Dictionary<Int,NSNumber>?
+    private var boolDict:Dictionary<Int,Bool>?
     private var nullDict:Dictionary<Int,NSNull>?
     // json cases
     private var arrayDict:Dictionary<Int,JSONArray>?
@@ -27,6 +28,9 @@ public struct JSONArray:SequenceType {
             count += n
         }
         if let n = numDict?.count {
+            count += n
+        }
+        if let n = boolDict?.count {
             count += n
         }
         if let n = nullDict?.count {
@@ -45,7 +49,8 @@ public struct JSONArray:SequenceType {
         self.restrictTypeChanges = restrictTypeChanges
         
     }
-    public init (array:[AnyObject], restrictTypeChanges:Bool = true, anyValueIsNullable:Bool = true) {
+    
+    public init (array:[AnyObject], handleBool:Bool = true, restrictTypeChanges:Bool = true, anyValueIsNullable:Bool = true) {
         // AJL: replace with map?
         self.anyValueIsNullable = anyValueIsNullable
         self.restrictTypeChanges = restrictTypeChanges
@@ -58,14 +63,28 @@ public struct JSONArray:SequenceType {
                 
                 
             }
+                
             else if let v = val.element as? NSNumber {
-                if numDict == nil {
-                    self.numDict = Dictionary<Int,NSNumber>()
+                // test to see if a bool
+                if handleBool && contains(stringify([val.element], options: nil, error: nil)!,"t") || handleBool &&  contains(stringify([val.element], options: nil, error: nil)!,"f") {
+                    if boolDict == nil {
+                        boolDict = Dictionary<Int,Bool>()
+                    }
+                    if boolDict != nil {
+                        boolDict![val.index] = Bool(v)
+                    }
                 }
-                numDict![val.index] = v
-                
-                
+                else {
+                if numDict == nil {
+                    numDict = Dictionary<Int,NSNumber>()
+                }
+                if numDict != nil {
+                    numDict![val.index] = v
+                    
+                    }
+                }
             }
+           
                 
             else if let v = val.element as? NSNull {
                 if nullDict == nil {
@@ -73,7 +92,7 @@ public struct JSONArray:SequenceType {
                     self.nullDict = Dictionary<Int,NSNull>()
                 }
                 nullDict![val.index] = v
-                    
+                
                 
             }
                 
@@ -81,11 +100,8 @@ public struct JSONArray:SequenceType {
                 if dictDict == nil {
                     self.dictDict = Dictionary<Int,JSONDictionary>()
                 }
-            
-                    dictDict![val.index] = JSONDictionary(dict: v, restrictTypeChanges: restrictTypeChanges, anyValueIsNullable: anyValueIsNullable)
-                    
-            
                 
+                dictDict![val.index] = JSONDictionary(dict: v, handleBool:handleBool, restrictTypeChanges: restrictTypeChanges, anyValueIsNullable: anyValueIsNullable)
                 
                 
             }
@@ -94,17 +110,19 @@ public struct JSONArray:SequenceType {
                 if arrayDict == nil {
                     self.arrayDict = Dictionary<Int,JSONArray>()
                 }
-            
-                    arrayDict![val.index] = JSONArray(array: v, restrictTypeChanges: restrictTypeChanges, anyValueIsNullable: anyValueIsNullable)
+                
+                arrayDict![val.index] = JSONArray(array: v, handleBool:handleBool, restrictTypeChanges: restrictTypeChanges, anyValueIsNullable: anyValueIsNullable)
                 
             }
             
         }
         
     }
+    
+    
     public var array:[AnyObject] {
         
-        var arr = [AnyObject](count: self.count, repeatedValue: [AnyObject]())
+        var arr = [AnyObject](count: self.count, repeatedValue: 0)
         if stringDict != nil {
             for (k,v) in stringDict! {
                 arr[k] = v
@@ -115,6 +133,11 @@ public struct JSONArray:SequenceType {
                 arr[k] = v
             }
         }
+        if boolDict != nil {
+            for (k,v) in boolDict! {
+                arr[k] = v
+            }
+        }
         if nullDict != nil {
             for (k,v) in nullDict! {
                 arr[k] = v
@@ -122,15 +145,14 @@ public struct JSONArray:SequenceType {
         }
         
         
-        
         if dictDict != nil {
             for (k,v) in dictDict! {
-                arr[k] = v.dictionary
+                arr[k] = v.dictionary as [String:AnyObject]
             }
         }
         if arrayDict != nil {
             for (k,v) in arrayDict! {
-                arr[k] = v.array
+                arr[k] = v.array as [AnyObject]
             }
         }
         return arr
@@ -149,6 +171,11 @@ public struct JSONArray:SequenceType {
         if numDict != nil {
             for (k,v) in numDict! {
                 arr[k] = v as NSNumber
+            }
+        }
+        if boolDict != nil {
+            for (k,v) in boolDict! {
+                arr[k] = v as Bool
             }
         }
         if nullDict != nil {
@@ -186,6 +213,7 @@ extension JSONArray {
             let a = self.count-1
             stringDict?.removeValueForKey(a)
             numDict?.removeValueForKey(a)
+            boolDict?.removeValueForKey(a)
             nullDict?.removeValueForKey(a)
             arrayDict?.removeValueForKey(a)
             dictDict?.removeValueForKey(a)
@@ -262,6 +290,10 @@ extension JSONArray {
                 if numDict?.isEmpty == true {
                     numDict = nil
                 }
+                boolDict?.removeValueForKey(key)
+                if boolDict?.isEmpty == true {
+                    boolDict = nil
+                }
                 arrayDict?.removeValueForKey(key)
                 if arrayDict?.isEmpty == true {
                     arrayDict = nil
@@ -305,6 +337,10 @@ extension JSONArray {
                 if stringDict?.isEmpty == true {
                     stringDict = nil
                 }
+                boolDict?.removeValueForKey(key)
+                if boolDict?.isEmpty == true {
+                    boolDict = nil
+                }
                 arrayDict?.removeValueForKey(key)
                 if arrayDict?.isEmpty == true {
                     arrayDict = nil
@@ -319,6 +355,55 @@ extension JSONArray {
                 }
                 // add value to numDict
                 numDict?[key] = newValue
+                
+            }
+        }
+    }
+    
+    public subscript (key:Int) -> Bool? {
+        get {
+            return boolDict?[key]
+        }
+        set(newValue) {
+            if boolDict?[key] != nil  {
+                boolDict?[key] = newValue
+            }
+                // if value starts as null, we assume it can be replaced, but there's no way of knowing what it can be replaced with so we must allow anything in the first instance
+            else if nullDict?[key] != nil {
+                nullDict?.removeValueForKey(key)
+                if nullDict?.isEmpty == true {
+                    nullDict = nil
+                }
+                // check to make sure there is a numDict and create one if not
+                if boolDict == nil {
+                    boolDict = Dictionary<Int,Bool>()
+                }
+                boolDict?[key] = newValue
+            }
+                // if the restriction of changing types has been turned off then anything can be replaced
+            else if restrictTypeChanges == false {
+                stringDict?.removeValueForKey(key)
+                if stringDict?.isEmpty == true {
+                    stringDict = nil
+                }
+                numDict?.removeValueForKey(key)
+                if numDict?.isEmpty == true {
+                    numDict = nil
+                }
+                arrayDict?.removeValueForKey(key)
+                if arrayDict?.isEmpty == true {
+                    arrayDict = nil
+                }
+                dictDict?.removeValueForKey(key)
+                if dictDict?.isEmpty == true {
+                    dictDict = nil
+                }
+                // check to make sure there is a numDict and create one if not
+                if boolDict == nil {
+                    boolDict = Dictionary<Int,Bool>()
+                }
+                // add value to numDict
+                boolDict?[key] = newValue
                 
             }
         }
@@ -341,6 +426,10 @@ extension JSONArray {
                 stringDict?.removeValueForKey(key)
                 if stringDict?.isEmpty == true {
                     stringDict = nil
+                }
+                boolDict?.removeValueForKey(key)
+                if boolDict?.isEmpty == true {
+                    boolDict = nil
                 }
                 arrayDict?.removeValueForKey(key)
                 if arrayDict?.isEmpty == true {
@@ -396,6 +485,10 @@ extension JSONArray {
                 if arrayDict?.isEmpty == true {
                     arrayDict = nil
                 }
+                boolDict?.removeValueForKey(key)
+                if boolDict?.isEmpty == true {
+                    boolDict = nil
+                }
                 dictDict?.removeValueForKey(key)
                 if dictDict?.isEmpty == true {
                     dictDict = nil
@@ -441,13 +534,17 @@ extension JSONArray {
                 if stringDict?.isEmpty == true {
                     stringDict = nil
                 }
+                boolDict?.removeValueForKey(key)
+                if boolDict?.isEmpty == true {
+                    boolDict = nil
+                }
                 arrayDict?.removeValueForKey(key)
                 if arrayDict?.isEmpty == true {
                     arrayDict = nil
                 }
-                dictDict?.removeValueForKey(key)
-                if dictDict?.isEmpty == true {
-                    dictDict = nil
+                numDict?.removeValueForKey(key)
+                if numDict?.isEmpty == true {
+                    numDict = nil
                 }
                 // check to make sure there is a numDict and create one if not
                 if dictDict == nil {
@@ -475,11 +572,19 @@ extension JSONArray {
         }
     }
     public mutating func append(num:NSNumber) {
-        if stringDict == nil {
+        if numDict == nil {
             numDict = Dictionary<Int,NSNumber>()
         }
         if numDict != nil {
             numDict![self.count] = num
+        }
+    }
+    public mutating func append(bool:Bool) {
+        if boolDict == nil {
+            boolDict = Dictionary<Int,Bool>()
+        }
+        if boolDict != nil {
+            boolDict![self.count] = bool
         }
     }
     
@@ -537,6 +642,17 @@ extension JSONArray {
             numDict = numD
         }
         
+        if var boolD = boolDict
+        {
+            // update boolDict
+            for (k,v) in boolD {
+                if k >= fromIndex {
+                    boolD[k+by] = v
+                }
+            }
+            boolDict = boolD
+        }
+        
         if var nulD = nullDict
         {
             // update nullDict
@@ -592,6 +708,16 @@ extension JSONArray {
         }
     }
     
+    public mutating func insert(bool:Bool, atIndex:Int) {
+        if self.count-1 >= atIndex {
+            updatePositions(atIndex)
+            if boolDict == nil {
+                boolDict = Dictionary<Int,Bool>()
+            }
+            boolDict?[atIndex] = bool
+        }
+    }
+    
     public mutating func insert(null:NSNull, atIndex:Int) {
         if self.count-1 >= atIndex {
             updatePositions(atIndex)
@@ -637,7 +763,10 @@ extension JSONArray {
                 return Value(a)
             }
             else if let a = numDict?[key] {
-                return Value(a)
+                return Value(num:a)
+            }
+            else if let a = boolDict?[key] {
+                return Value(bool:a)
             }
                 
             else if let a = nullDict?[key] {
@@ -669,7 +798,7 @@ extension JSONArray {
         return NSJSONSerialization.dataWithJSONObject(self.array, options: options, error: error)
     }
     
-    public func stringify(options:NSJSONWritingOptions = nil, error:NSErrorPointer = nil)->String? {
+    public func stringify(options:NSJSONWritingOptions = nil, error:NSErrorPointer = nil) -> String? {
         if let data = NSJSONSerialization.dataWithJSONObject(self.array, options: options, error: error) {
             let count = data.length / sizeof(UInt8)
             
@@ -685,6 +814,23 @@ extension JSONArray {
         }
         else {return nil }
     }
+    public func stringify(object:[AnyObject], options:NSJSONWritingOptions = nil, error:NSErrorPointer = nil) -> String? {
+        if let data = NSJSONSerialization.dataWithJSONObject(object, options: options, error: error) {
+            let count = data.length / sizeof(UInt8)
+            
+            // create array of appropriate length:
+            var array = [UInt8](count: count, repeatedValue: 0)
+            
+            // copy bytes into array
+            data.getBytes(&array, length:count * sizeof(UInt8))
+            
+            
+            return String(bytes: array, encoding: NSUTF8StringEncoding)
+            
+        }
+        else {return nil }
+    }
+
 
 }
 
