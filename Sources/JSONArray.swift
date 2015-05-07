@@ -66,7 +66,7 @@ public struct JSONArray:SequenceType {
                 
             else if let v = val.element as? NSNumber {
                 // test to see if a bool
-                if handleBool && contains(stringify([val.element], options: nil, error: nil)!,"t") || handleBool &&  contains(stringify([val.element], options: nil, error: nil)!,"f") {
+                if handleBool && v.objCType.memory == 99 {
                     if boolDict == nil {
                         boolDict = Dictionary<Int,Bool>()
                     }
@@ -814,23 +814,7 @@ extension JSONArray {
         }
         else {return nil }
     }
-    public func stringify(object:[AnyObject], options:NSJSONWritingOptions = nil, error:NSErrorPointer = nil) -> String? {
-        if let data = NSJSONSerialization.dataWithJSONObject(object, options: options, error: error) {
-            let count = data.length / sizeof(UInt8)
-            
-            // create array of appropriate length:
-            var array = [UInt8](count: count, repeatedValue: 0)
-            
-            // copy bytes into array
-            data.getBytes(&array, length:count * sizeof(UInt8))
-            
-            
-            return String(bytes: array, encoding: NSUTF8StringEncoding)
-            
-        }
-        else {return nil }
-    }
-
+    
 
 }
 
