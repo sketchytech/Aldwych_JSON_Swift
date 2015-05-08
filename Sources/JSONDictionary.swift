@@ -125,7 +125,7 @@ public struct JSONDictionary:SequenceType {
             }
             else if let v = v as? NSNumber  {
                 // test to see if a bool
-                if handleBool && v.objCType.memory == 99 {
+                if handleBool && v.isEqualToValue(NSNumber(bool: true)) || handleBool && v.isEqualToValue(NSNumber(bool: false)) {
                     if boolDict == nil {
                         boolDict = Dictionary<String,Bool>()
                     }
