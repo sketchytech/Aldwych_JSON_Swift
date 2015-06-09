@@ -67,7 +67,7 @@ public struct JSONDictionary:SequenceType {
         return dictionary
     }
     public var nsDictionary:NSDictionary {
-        var dictionary = NSMutableDictionary()
+        let dictionary = NSMutableDictionary()
         
         
         if let sD = stringDict  {
@@ -583,42 +583,42 @@ extension JSONDictionary {
     }
     public var keysWithStringValues:[String]? {
         if stringDict != nil {
-            let keys = map(stringDict!){k,v in k}
+            let keys = (stringDict!).map{k,v in k}
             return keys
         }
         return nil
     }
     public var keysWithNumberValues:[String]? {
         if numDict != nil {
-            let keys = map(numDict!){k,v in k}
+            let keys = (numDict!).map{k,v in k}
             return keys
         }
         return nil
     }
     public var keysWithBoolValues:[String]? {
         if boolDict != nil {
-            let keys = map(boolDict!){k,v in k}
+            let keys = (boolDict!).map{k,v in k}
             return keys
         }
         return nil
     }
     public var keysWithNullValues:[String]? {
         if nullDict != nil {
-            let keys = map(nullDict!){k,v in k}
+            let keys = (nullDict!).map{k,v in k}
             return keys
         }
         return nil
     }
     public var keysWithArrayValues:[String]? {
         if arrayDict != nil {
-            let keys = map(arrayDict!){k,v in k}
+            let keys = (arrayDict!).map{k,v in k}
             return keys
         }
         return nil
     }
     public var keysWithDictionaryValues:[String]? {
         if dictDict != nil {
-            let keys = map(dictDict!){k,v in k}
+            let keys = (dictDict!).map{k,v in k}
             return keys
         }
         return nil
@@ -649,24 +649,25 @@ extension JSONDictionary {
 }
 // return JSON data
 extension JSONDictionary {
-    public func jsonData(options:NSJSONWritingOptions = nil, error:NSErrorPointer = nil) -> NSData? {
-        return NSJSONSerialization.dataWithJSONObject(self.dictionary, options: options, error: error)
+    public func jsonData(options:NSJSONWritingOptions = []) throws -> NSData {
+        return try NSJSONSerialization.dataWithJSONObject(self.dictionary, options: options)
     }
-    public func stringify(options:NSJSONWritingOptions = nil, error:NSErrorPointer = nil) -> String? {
-        if let data = NSJSONSerialization.dataWithJSONObject(self.dictionary, options: options, error: error) {
-            let count = data.length / sizeof(UInt8)
+    public func stringify(options:NSJSONWritingOptions = []) throws -> String {
+        let error: NSError! = NSError(domain: "Migrator", code: 0, userInfo: nil)
+        let data = try NSJSONSerialization.dataWithJSONObject(self.dictionary, options: options)
+        let count = data.length / sizeof(UInt8)
             
-            // create array of appropriate length:
-            var array = [UInt8](count: count, repeatedValue: 0)
+        // create array of appropriate length:
+        var array = [UInt8](count: count, repeatedValue: 0)
             
-            // copy bytes into array
-            data.getBytes(&array, length:count * sizeof(UInt8))
+        // copy bytes into array
+        data.getBytes(&array, length:count * sizeof(UInt8))
             
             
-            return String(bytes: array, encoding: NSUTF8StringEncoding)
-            
+        if let value = String(bytes: array, encoding: NSUTF8StringEncoding) {
+            return value
         }
-        else {return nil }
+        throw error
     }
     
    }

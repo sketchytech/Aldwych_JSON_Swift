@@ -17,7 +17,7 @@ class XMLParser:NSObject, NSXMLParserDelegate {
    
     
     func parse(xml:NSData) -> JSONDictionary {
-        var xml2json = NSXMLParser(data: xml)
+        let xml2json = NSXMLParser(data: xml)
         // xml2json.shouldProcessNamespaces = true
         xml2json.delegate = self
         xml2json.parse()
@@ -27,8 +27,9 @@ class XMLParser:NSObject, NSXMLParserDelegate {
     func parserDidStartDocument(parser: NSXMLParser) {
     
     }
-    
-    func parser(parser: NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [NSObject : AnyObject]) {
+
+ 
+    func parser(parser:NSXMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
        
         // current dictionary is the newly opened tag
         elementArray.append(JSONDictionary(dict: [elementName:"", "attributes":attributeDict], restrictTypeChanges: false))
@@ -39,22 +40,16 @@ class XMLParser:NSObject, NSXMLParserDelegate {
 
     }
     
-    func parser(parser: NSXMLParser, foundCharacters string: String?) {
-        if let str = string {
-
-                // current array is always the last item in holding, add string to array
-                contentArray[contentArray.count-1].append(str)
+    func parser(parser: NSXMLParser, foundCharacters string: String) {
+                contentArray[contentArray.count-1].append(string)
         
-
-            
-        }
     }
     
     func parser(parser: NSXMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
 
         // current array, which might be one string or a nested set of elements is added to the current dictionary
         if contentArray.count > 0 {
-            for (k,v) in elementArray.last! {
+            for (k,_) in elementArray.last! {
                 if k != "attributes" {
                     elementArray[elementArray.count-1][k] = contentArray.last
                 }
@@ -96,13 +91,13 @@ class XMLParser:NSObject, NSXMLParserDelegate {
             let xmlEntities = ["\"":"&quot;","&":"&amp;","'":"&apos;","<":"lt",">":"&gt;"]
             var strA = str
             for (k,v) in xmlEntities {
-                strA = strA.stringByReplacingOccurrencesOfString(k, withString: v, options: nil, range: Range(start: strA.startIndex, end: strA.endIndex))
+                strA = strA.stringByReplacingOccurrencesOfString(k, withString: v)
             }
             return strA
             
         }
     
-        static func json2xml(json:JSONDictionary)->String? {
+    static func json2xml(json:JSONDictionary)->String? {
             
             let str = json2xmlUnchecked(json)
             

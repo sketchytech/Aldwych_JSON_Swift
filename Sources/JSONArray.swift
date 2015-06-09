@@ -8,7 +8,7 @@
 import Foundation
 
 // initialization of JSONArray type
-public struct JSONArray:SequenceType {
+public struct JSONArray {
     //TODO: make restrictions work for nest dictionaries when changed after initialization
     public var inheritRestrictions = true
     public var restrictTypeChanges:Bool
@@ -54,7 +54,7 @@ public struct JSONArray:SequenceType {
         // AJL: replace with map?
         self.anyValueIsNullable = anyValueIsNullable
         self.restrictTypeChanges = restrictTypeChanges
-        for val in enumerate(array) {
+        for val in array.enumerate() {
             if let v = val.element as? String {
                 if stringDict == nil {
                     self.stringDict = Dictionary<Int,String>()
@@ -162,7 +162,7 @@ public struct JSONArray:SequenceType {
     
     public var nsArray:NSArray {
         
-        var arr = NSMutableArray(capacity: self.count)
+        let arr = NSMutableArray(capacity: self.count)
         if stringDict != nil {
             for (k,v) in stringDict! {
                 arr[k] = v as NSString
@@ -200,7 +200,7 @@ public struct JSONArray:SequenceType {
     
 }
 // JSON conform to SequenceType
-extension JSONArray {
+extension JSONArray:SequenceType {
     public typealias Generator = JSONArrayGenerator
     public func generate() -> Generator {
         // AJL: avoid strong capture of self?
@@ -233,7 +233,7 @@ extension JSONArray {
     // returns all the values from the string dictionary
     public func stringArray() -> [String]?  {
         if let v = stringDict?.values {
-            return map(v){$0}
+            return v.map{$0}
         }
         return nil
     }
@@ -253,7 +253,7 @@ extension JSONArray {
     }
     public func dictionaryArray() -> [JSONDictionary]?  {
         if let v = dictDict?.values {
-            return map(v){$0}
+            return v.map{$0}
         }
         return nil
     }
@@ -453,7 +453,6 @@ extension JSONArray {
     public subscript (key:Int) -> JSONArray? {
         get {
             var arrayD = self.arrayDict?[key]
-            
             if inheritRestrictions == true {
                 arrayD?.restrictTypeChanges = self.restrictTypeChanges
                 arrayD?.anyValueIsNullable = self.anyValueIsNullable
@@ -794,25 +793,26 @@ extension JSONArray {
 
 // return JSON data
 extension JSONArray {
-    public func jsonData(options:NSJSONWritingOptions = nil, error:NSErrorPointer = nil) -> NSData? {
-        return NSJSONSerialization.dataWithJSONObject(self.array, options: options, error: error)
+    public func jsonData(options:NSJSONWritingOptions = []) throws -> NSData {
+        return try NSJSONSerialization.dataWithJSONObject(self.array, options: options)
     }
     
-    public func stringify(options:NSJSONWritingOptions = nil, error:NSErrorPointer = nil) -> String? {
-        if let data = NSJSONSerialization.dataWithJSONObject(self.array, options: options, error: error) {
-            let count = data.length / sizeof(UInt8)
+    public func stringify(options:NSJSONWritingOptions = []) throws -> String {
+        let error: NSError! = NSError(domain: "Migrator", code: 0, userInfo: nil)
+        let data = try NSJSONSerialization.dataWithJSONObject(self.array, options: options)
+        let count = data.length / sizeof(UInt8)
             
-            // create array of appropriate length:
-            var array = [UInt8](count: count, repeatedValue: 0)
+        // create array of appropriate length:
+        var array = [UInt8](count: count, repeatedValue: 0)
             
-            // copy bytes into array
-            data.getBytes(&array, length:count * sizeof(UInt8))
+        // copy bytes into array
+        data.getBytes(&array, length:count * sizeof(UInt8))
             
             
-            return String(bytes: array, encoding: NSUTF8StringEncoding)
-            
+        if let value = String(bytes: array, encoding: NSUTF8StringEncoding) {
+            return value
         }
-        else {return nil }
+        throw error
     }
     
 

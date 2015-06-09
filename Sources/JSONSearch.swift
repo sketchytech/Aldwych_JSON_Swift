@@ -9,28 +9,28 @@
 import Foundation
 
 
-public func replaceStringUsingRegularExpressionInJSONArray(expression exp:String, inout arr:JSONArray, withString string: String,options opt:NSMatchingOptions = nil) {
+public func replaceStringUsingRegularExpressionInJSONArray(expression exp:String, inout arr:JSONArray, withString string: String, options opt:NSMatchingOptions = []) {
     
     // make sure we can make type changes everywhere
     arr.restrictTypeChanges = false
     arr.inheritRestrictions = true
-    
-    for a in enumerate(arr) {
-        if let array = a.element.jsonArr {
-            replaceStringUsingRegularExpressionInJSONArray(expression: exp, &arr[a.index]!, withString:string)
+    var error:NSError?
+    for a in arr.enumerate() {
+        if let _ = a.element.jsonArr {
+            replaceStringUsingRegularExpressionInJSONArray(expression: exp, arr: &arr[a.index]!, withString:string)
         }
         else if let str = a.element.str {
             var s = str
-            s.replaceStringsUsingRegularExpression(expression: exp, withString:string, error: nil)
+            s.replaceStringsUsingRegularExpression(expression: exp, withString:string, error: &error)
             arr[a.index] = s
         }
-        else if let dic = a.element.jsonDict {
-            replaceStringUsingRegularExpressionInJSONDictionary(exp, &arr[a.index]!, withString: string,options:opt)
+        else if let _ = a.element.jsonDict {
+            replaceStringUsingRegularExpressionInJSONDictionary(exp, dict: &arr[a.index]!, withString: string,options:opt)
         }
         
     }
 }
-public func replaceStringUsingRegularExpressionInJSONDictionary(exp:String, inout dict:JSONDictionary, withString string:String, options opt:NSMatchingOptions = nil) {
+public func replaceStringUsingRegularExpressionInJSONDictionary(exp:String, inout dict:JSONDictionary, withString string:String, options opt:NSMatchingOptions = []) {
     
     // make sure we can make type changes everywhere
     dict.restrictTypeChanges = false
@@ -43,12 +43,12 @@ public func replaceStringUsingRegularExpressionInJSONDictionary(exp:String, inou
             dict[k] = s
         }
         
-        else if let dic = v?.jsonDict {
+        else if let _ = v?.jsonDict {
 
-        replaceStringUsingRegularExpressionInJSONDictionary(exp, &dict[k]!, withString: string)
+        replaceStringUsingRegularExpressionInJSONDictionary(exp, dict: &dict[k]!, withString: string)
         }
-        else if let arr = v?.jsonArr {
-            replaceStringUsingRegularExpressionInJSONArray(expression: exp, &dict[k]!, withString:string, options:opt)
+        else if let _ = v?.jsonArr {
+            replaceStringUsingRegularExpressionInJSONArray(expression: exp, arr: &dict[k]!, withString:string, options:opt)
 
         }
 
@@ -60,30 +60,30 @@ public func replaceStringUsingRegularExpressionInJSONDictionary(exp:String, inou
     
 }
 
-public func replaceStringWithStringInJSONArray(string:String, inout arr:JSONArray, withString: String, options opt:NSMatchingOptions = nil) {
+public func replaceStringWithStringInJSONArray(string:String, inout arr:JSONArray, withString: String, options opt:NSMatchingOptions = []) {
     
     // make sure we can make type changes everywhere
     arr.restrictTypeChanges = false
     arr.inheritRestrictions = true
     
-    for a in enumerate(arr) {
-        if let array = a.element.jsonArr {
+    for a in arr.enumerate() {
+        if let _ = a.element.jsonArr {
         
-            replaceStringUsingRegularExpressionInJSONArray(expression: string, &arr[a.index]!, withString:withString)
+            replaceStringUsingRegularExpressionInJSONArray(expression: string, arr: &arr[a.index]!, withString:withString)
         }
         else if let str = a.element.str {
-            var s = str
-            s.stringByReplacingOccurrencesOfString(str, withString: withString, options: nil, range: nil)
+            let s = str
+            s.stringByReplacingOccurrencesOfString(str, withString: withString, options: [], range: nil)
   
             arr[a.index] = s
         }
-        else if let dic = a.element.jsonDict {
-            replaceStringUsingRegularExpressionInJSONDictionary(string, &arr[a.index]!, withString: withString,options:opt)
+        else if let _ = a.element.jsonDict {
+            replaceStringUsingRegularExpressionInJSONDictionary(string, dict: &arr[a.index]!, withString: withString,options:opt)
         }
         
     }
 }
-public func replaceStringWithStringInJSONDictionary(string:String, inout dict:JSONDictionary, withString:String, options opt:NSMatchingOptions = nil) {
+public func replaceStringWithStringInJSONDictionary(string:String, inout dict:JSONDictionary, withString:String, options opt:NSMatchingOptions = []) {
     
     // make sure we can make type changes everywhere
     dict.restrictTypeChanges = false
@@ -96,12 +96,12 @@ public func replaceStringWithStringInJSONDictionary(string:String, inout dict:JS
             dict[k] = s
         }
             
-        else if let dic = v?.jsonDict {
+        else if let _ = v?.jsonDict {
             
-            replaceStringUsingRegularExpressionInJSONDictionary(string, &dict[k]!, withString: withString)
+            replaceStringUsingRegularExpressionInJSONDictionary(string, dict: &dict[k]!, withString: withString)
         }
-        else if let arr = v?.jsonArr {
-            replaceStringUsingRegularExpressionInJSONArray(expression: string, &dict[k]!, withString:withString, options:opt)
+        else if let _ = v?.jsonArr {
+            replaceStringUsingRegularExpressionInJSONArray(expression: string, arr: &dict[k]!, withString:withString, options:opt)
             
         }
         
@@ -119,16 +119,16 @@ public func replaceValue(key:String, inout dict:JSONDictionary, array arra:JSONA
     dict.restrictTypeChanges = false
     dict.inheritRestrictions = true
     
-    if contains(dict.keys,key) {
+    if dict.keys.contains(key) {
         dict[key] = arra
     }
         
     else if let dK = dict.keysWithArrayValues {
         for k in dK {
             if let arr = dict[k]?.jsonArr {
-                for a in enumerate(arr) {
-                    if let dictionary = a.element.jsonDict {
-                        replaceValue(key, &dict[k]![a.index]!,array: arra)
+                for a in arr.enumerate() {
+                    if let _ = a.element.jsonDict {
+                        replaceValue(key, dict: &dict[k]![a.index]!,array: arra)
                     }
                 }
             }
@@ -153,16 +153,16 @@ func replaceValue(key:String, inout dict:JSONDictionary, dictionary dic:JSONDict
     dict.restrictTypeChanges = false
     dict.inheritRestrictions = true
     
-    if contains(dict.keys,key) {
+    if dict.keys.contains(key) {
         dict[key] = dic
     }
         
     else if let dK = dict.keysWithArrayValues {
         for k in dK {
             if let arr = dict[k]?.jsonArr {
-                for a in enumerate(arr) {
-                    if let dictionary = a.element.jsonDict {
-                        replaceValue(key, &dict[k]![a.index]!,dictionary: dic)
+                for a in arr.enumerate() {
+                    if let _ = a.element.jsonDict {
+                        replaceValue(key, dict: &dict[k]![a.index]!,dictionary: dic)
                     }
                 }
             }
@@ -178,7 +178,7 @@ func replaceValue(key:String, inout dict:JSONDictionary, string str:String) {
     dict.restrictTypeChanges = false
     dict.inheritRestrictions = true
     
-    if contains(dict.keys,key) {
+    if dict.keys.contains(key) {
         dict[key] = str
     }
  /*
@@ -193,9 +193,9 @@ func replaceValue(key:String, inout dict:JSONDictionary, string str:String) {
     else if let dK = dict.keysWithArrayValues {
         for k in dK {
             if let arr = dict[k]?.jsonArr {
-                for a in enumerate(arr) {
-                    if let dictionary = a.element.jsonDict {
-                        replaceValue(key, &dict[k]![a.index]!,string: str)
+                for a in arr.enumerate() {
+                    if let _ = a.element.jsonDict {
+                        replaceValue(key, dict: &dict[k]![a.index]!,string: str)
                     }
                 }
             }
@@ -209,16 +209,16 @@ func replaceValue(key:String, inout dict:JSONDictionary, number num:NSNumber) {
     dict.restrictTypeChanges = false
     dict.inheritRestrictions = true
     
-    if contains(dict.keys,key) {
+    if dict.keys.contains(key) {
         dict[key] = num
     }
         
     else if let dK = dict.keysWithArrayValues {
         for k in dK {
             if let arr = dict[k]?.jsonArr {
-                for a in enumerate(arr) {
-                    if let dictionary = a.element.jsonDict {
-                        replaceValue(key, &dict[k]![a.index]!,number: num)
+                for a in arr.enumerate() {
+                    if let _ = a.element.jsonDict {
+                        replaceValue(key, dict: &dict[k]![a.index]!,number: num)
                     }
                 }
             }
@@ -232,16 +232,16 @@ func replaceValueWithNull(key:String, inout dict:JSONDictionary) {
     dict.restrictTypeChanges = false
     dict.inheritRestrictions = true
     
-    if contains(dict.keys,key) {
+    if dict.keys.contains(key) {
         dict[key] = NSNull()
     }
         
     else if let dK = dict.keysWithArrayValues {
         for k in dK {
             if let arr = dict[k]?.jsonArr {
-                for a in enumerate(arr) {
-                    if let dictionary = a.element.jsonDict {
-                        replaceValueWithNull(key, &dict[k]![a.index]!)
+                for a in arr.enumerate() {
+                    if let _ = a.element.jsonDict {
+                        replaceValueWithNull(key, dict: &dict[k]![a.index]!)
                     }
                 }
             }
@@ -250,7 +250,7 @@ func replaceValueWithNull(key:String, inout dict:JSONDictionary) {
 }
 func searchKeys(key:String, dict:JSONDictionary) -> Value? {
     
-    if contains(dict.keys,key) {
+    if dict.keys.contains(key) {
         return dict[key]!
     }
     else if let dK = dict.keysWithArrayValues {
@@ -258,7 +258,7 @@ func searchKeys(key:String, dict:JSONDictionary) -> Value? {
             if let arr = dict[k]?.jsonArr {
                 for a in arr {
                     if let dictionary = a.jsonDict {
-                      searchKeys(key, dictionary)
+                      searchKeys(key, dict: dictionary)
                     }
                 }
             }

@@ -88,7 +88,7 @@ extension Value {
         switch self {
         case .StringType(let str):
             return str
-        case .NullType(let null):
+        case .NullType( _):
             let a:String? = nil
             return a
         default:
@@ -111,7 +111,7 @@ extension Value {
         switch self {
         case .NumberType(let num):
             return num
-        case .NullType(let null):
+        case .NullType( _):
             let a:NSNumber? = nil
             return a
         default:
@@ -133,7 +133,7 @@ extension Value {
         switch self {
         case .BoolType(let bool):
             return bool
-        case .NullType(let null):
+        case .NullType( _):
             let a:Bool? = nil
             return a
         default:
@@ -163,7 +163,7 @@ extension Value {
         switch self {
         case .JSONArrayType(let jsonArr):
             return jsonArr
-        case .NullType(let null):
+        case .NullType( _):
             let a:JSONArray? = nil
             return a
         default:
@@ -185,7 +185,7 @@ extension Value {
         switch self {
         case .JSONDictionaryType(let jsonDict):
             return jsonDict
-        case .NullType(let null):
+        case .NullType( _):
             let a:JSONDictionary? = nil
             return a
         default:
