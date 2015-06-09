@@ -1,5 +1,5 @@
 # Aldwych
-JSON parser/creator for Swift &ndash; for parsing, editing, creating and reconstituting of parsed data. Note: Master branch is Swift 1.2 compatible and Swift 2 branch is Swift 2 compatible.
+JSON parser/creator for Swift &ndash; for parsing, editing, creating and reconstituting of parsed data. Note: Master branch is Swift 1.2 compatible and Swift 2 branch is Swift 2 compatible (and currently being tested).
 
 
 #Guiding Principles
