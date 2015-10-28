@@ -1,5 +1,5 @@
 # Aldwych
-JSON parser/creator for Swift &ndash; for parsing, editing, creating and reconstituting of parsed data. Note: Master branch is Swift 1.2 compatible and Swift 2 branch is Swift 2 compatible (and currently being tested).
+JSON parser/creator for Swift &ndash; for parsing, editing, creating and reconstituting of parsed data. Note: Master branch is Swift 1.2 compatible and Swift 2 branch is Swift 2 compatible (and currently being tested). Following the addition of recursive enums to Swift, [Aldwych 2](https://github.com/sketchytech/Aldwych-2-JSON-Parser-for-Swift) was created. This is now the most current code and most frequently maintained. It is available in the form of a Swift Playground with examples included within it.
 
 
 #Guiding Principles
