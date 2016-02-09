@@ -38,11 +38,14 @@ To use simply copy the contents of the Sources folder into your app or playgroun
 ##Parse JSON Data
 To parse NSData simply use
 
-`JSONParser.parseDictionary(json:NSData, restrictTypeChanges:Bool = true, anyValueIsNullable:Bool = true) -> JSONDictionary?`
-
+```swift
+JSONParser.parseDictionary(json:NSData, restrictTypeChanges:Bool = true, anyValueIsNullable:Bool = true) -> JSONDictionary?`
+```
 or 
 
-`JSONParser.parseArray(json:NSData, restrictTypeChanges:Bool = true, anyValueIsNullable:Bool = true)  -> JSONArray?`
+```swift
+JSONParser.parseArray(json:NSData, restrictTypeChanges:Bool = true, anyValueIsNullable:Bool = true)  -> JSONArray?
+```
 
 Default settings do not allow changes of type but do allow values to become null. To enable changes of type change **restrictTypeChanges** to **false** and to prevent nullability of values change **anyValueIsNullable** to **false**.
 
@@ -52,22 +55,22 @@ In order to retrieve a value identify its type, e.g. `if let tName = jsonDiction
 
 Updates to results can be made like this `jsonDictionary["results"]?[0]?["trackName"] = "Something"`
 #Creation of JSON
-    
-    var myJSON = JSONDictionary()
-    // A JSONDictionary instance has been created
-    myJSON["Third"] = "One"
-    // A string key with string value has been added
-    myJSON["Fourth"] = myJSON
-    // A copy of the JSONDictionary has been added creating a nest
-    myJSON["Fourth"]?["Third"] = "Two"
-    // a nested value is changed
-    if let aStr = myJSON["Fourth"]?["Third"]?.str {
-        println(aStr) // Two
-    }
-    // A value is extracted from the nested JSONDictionary
-    myJSON.jsonData()?.writeToFile("/tmp/myJSON.json", atomically: false)
-    // JSON has now been written to /tmp directory
-
+```swift    
+var myJSON = JSONDictionary()
+// A JSONDictionary instance has been created
+myJSON["Third"] = "One"
+// A string key with string value has been added
+myJSON["Fourth"] = myJSON
+// A copy of the JSONDictionary has been added creating a nest
+myJSON["Fourth"]?["Third"] = "Two"
+// a nested value is changed
+if let aStr = myJSON["Fourth"]?["Third"]?.str {
+    println(aStr) // Two
+}
+// A value is extracted from the nested JSONDictionary
+myJSON.jsonData()?.writeToFile("/tmp/myJSON.json", atomically: false)
+// JSON has now been written to /tmp directory
+```
 Once the JSON has been created in this way, the file you created will contain text that looks like this:
 
 `{"Fourth":{"Third":"Two"},"Third":"One"}`
